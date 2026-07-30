@@ -36,7 +36,11 @@ def generate_singapore_itinerary(prompt: str) -> SingaporeItinerary:
         messages=[
             {
                 "role": "system",
-                "content": "You are an expert local Singapore tour guide and urban planner. Provide realistic, geographically logical itineraries featuring actual MRT lines, landmarks, and accurate coordinates. Ensure venues are geographically ordered from North to South or West to East to minimize overall travel time."
+                "content": "You are an expert local Singapore tour guide and urban planner. Provide realistic, "
+                           "geographically logical itineraries featuring actual MRT lines, landmarks, and accurate "
+                           "coordinates. Ensure venues are geographically ordered from North to South or West to East "
+                           "to minimize overall travel time. Ensure the travel time from one stop to another is not "
+                           "exceeding 40 minutes"
             },
             {
                 "role": "user",

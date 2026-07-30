@@ -98,36 +98,22 @@ def parse_route_summary(
     start_venue: str = "",
     end_venue: str = ""
 ) -> dict:
-    """
-    Parses complex OneMap transit JSON into a clean summary dictionary.
-    Handles API errors, empty itineraries, and offshore spatial snapping anomalies.
-    """
-    # 1. Handle explicit API error flags (e.g. 404 / 400 offshore island response)
     if route_data.get("error") == "NO_PUBLIC_TRANSIT_COVERAGE":
         return {
             "real_commute_mins": 45,
             "walk_distance_m": 0,
-            "step_by_step": "⛵ Offshore Ferry Transfer required (No direct MRT/Bus route available)",
+            "step_by_step": "⛵ Offshore Ferry Transfer required",
             "is_offshore": True,
-        }
-
-    if "error" in route_data:
-        return {
-            "real_commute_mins": 0,
-            "walk_distance_m": 0,
-            "step_by_step": f"Unable to route: {route_data.get('error')}",
-            "is_offshore": False,
         }
 
     plan = route_data.get("plan", {})
     itineraries = plan.get("itineraries", [])
 
-    # 2. Handle empty itineraries (No public transport route found)
     if not itineraries:
         return {
-            "real_commute_mins": 0,
+            "real_commute_mins": 10,
             "walk_distance_m": 0,
-            "step_by_step": "No direct public transit route found.",
+            "step_by_step": "🚖 Recommended: Short Taxi/Grab ride (~$6-8 SGD)",
             "is_offshore": False,
         }
 
@@ -135,11 +121,36 @@ def parse_route_summary(
     total_mins = round(best_route.get("duration", 0) / 60)
     walk_dist = round(best_route.get("walkDistance", 0))
 
-    legs = []
-    has_excessive_walk = False
+    legs = best_route.get("legs", [])
+    is_pure_walk = all(leg.get("mode") == "WALK" for leg in legs)
 
-    for leg in best_route.get("legs", []):
-        mode = leg.get("mode")  # 'WALK', 'BUS', or 'SUBWAY'/'RAIL'
+    # 🚨 PURE WALK DETECTOR: If route is 100% walking and > 800m
+    if is_pure_walk and walk_dist > 800:
+        dist_km = walk_dist / 1000.0
+
+        # 1. Dynamic Drive Time: ~30 km/h average city speed (500m/min) + 3-min pickup/traffic buffer
+        drive_mins = max(5, round((dist_km / 0.5) + 3))
+
+        # 2. Dynamic Fare Formula (Base ~$4.50 + ~$0.90/km)
+        estimated_base = 4.50 + (dist_km * 0.90)
+
+        # Standard SG Taxi/Grab minimum fare is ~$6.00
+        min_fare = max(10, round(estimated_base))
+        max_fare = round(min_fare * 1.35)  # 35% buffer for peak surcharges / dynamic pricing
+
+        return {
+            "real_commute_mins": drive_mins,
+            "walk_distance_m": walk_dist,
+            "step_by_step": (
+                f"🚖 Recommended: ~{drive_mins} min Taxi/Grab (~${min_fare}-${max_fare} SGD) "
+                f"| 🚶 Optional Walk: {walk_dist}m ({total_mins} mins)"
+            ),
+            "is_offshore": False,
+        }
+
+    formatted_legs = []
+    for leg in legs:
+        mode = leg.get("mode")
         route_name = leg.get("route", "")
         from_stop = leg.get("from", {}).get("name", "Start")
         to_stop = leg.get("to", {}).get("name", "End")
@@ -147,29 +158,13 @@ def parse_route_summary(
         leg_dist = round(leg.get("distance", 0))
 
         if mode == "WALK":
-            # Flag suspicious walk legs (e.g., >1000m snapping across water/open grounds)
-            if leg_dist > 1000:
-                has_excessive_walk = True
-            legs.append(f"Walk {leg_dist}m ({duration} mins)")
+            formatted_legs.append(f"Walk {leg_dist}m ({duration} mins)")
         else:
-            legs.append(f"Take {mode} {route_name} from '{from_stop}' to '{to_stop}' ({duration} mins)")
-
-    step_by_step = " ➔ ".join(legs)
-
-    # 3. Detect Ocean / Offshore Snapping Anomaly
-    offshore_keywords = ["lazarus", "st. john", "ubin", "kusu", "island"]
-    is_offshore = any(kw in (start_venue + end_venue).lower() for kw in offshore_keywords)
-
-    if is_offshore and has_excessive_walk:
-        # Override unrealistic ocean walk with a ferry transfer notice
-        step_by_step = (
-            "⛵ Ferry Transfer (~30-45 mins to mainland pier) ➔ " + step_by_step
-        )
-        total_mins += 45  # Add realistic ferry duration buffer
+            formatted_legs.append(f"Take {mode} {route_name} from '{from_stop}' to '{to_stop}' ({duration} mins)")
 
     return {
         "real_commute_mins": total_mins,
         "walk_distance_m": walk_dist,
-        "step_by_step": step_by_step,
-        "is_offshore": is_offshore,
+        "step_by_step": " ➔ ".join(formatted_legs),
+        "is_offshore": False,
     }
