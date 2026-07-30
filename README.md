@@ -145,6 +145,7 @@ python main.py
 | **Coordinate Hallucination** | Generates coordinates outside Singapore (e.g., latitude `1.798`), causing routing failures. | Validates every venue through SLA OneMap Elastic Search and replaces hallucinated coordinates with official values. |
 | **Schedule Misalignment** | Uses current system time when querying transit APIs, producing incorrect routes for future itineraries. | Maintains a sequential itinerary clock and queries OneMap using the user's planned departure time. |
 | **Excessive Walking Routes** | Suggests 2 km+ walks between attractions. | Limits walking distance (`maxWalkDistance = 500 m`) and automatically requests multimodal bus/MRT routes instead. |
+| **Offshore / Non-Transit Locations** | Recommends destinations with no bus/MRT access (e.g. Lazarus Island, Pulau Ubin), causing HTTP 404 routing errors. | Intercepts HTTP 404 transit exceptions and injects a custom ferry/private transfer fallback notice without breaking the timeline engine. |
 
 ---
 
