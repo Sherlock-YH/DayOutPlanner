@@ -48,13 +48,45 @@ def get_public_transit_route(
         "mode": "TRANSIT",        # Combines MRT + Bus + Walk
         "date": date_str,
         "time": time_str,
-        "maxWalkDistance": "1000",
+        "maxWalkDistance": "500",
         "numItineraries": "1",
     }
 
     response = requests.get(url, headers=headers, params=params)
     response.raise_for_status()
     return response.json()
+
+
+def search_onemap_coords(venue_name: str) -> tuple[float, float] | None:
+    """
+    Searches SLA OneMap Elastic Search API for a venue name
+    and returns its exact verified (latitude, longitude).
+    """
+    url = "https://www.onemap.gov.sg/api/common/elastic/search"
+    params = {
+        "searchVal": venue_name,
+        "returnGeom": "Y",
+        "getAddrDetails": "Y",
+        "pageNum": "1"
+    }
+
+    try:
+        response = requests.get(url, params=params)
+        response.raise_for_status()
+        data = response.json()
+
+        results = data.get("results", [])
+        if results:
+            # First result is usually the best match
+            best_match = results[0]
+            lat = float(best_match["LATITUDE"])
+            lng = float(best_match["LONGITUDE"])
+            return lat, lng
+
+    except Exception as e:
+        print(f"⚠️ Geocoding failed for '{venue_name}': {e}")
+
+    return None
 
 
 def parse_route_summary(route_data: dict) -> dict:

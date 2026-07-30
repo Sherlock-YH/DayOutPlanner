@@ -2,7 +2,7 @@ from datetime import datetime, timedelta
 from dotenv import load_dotenv
 
 from poc import generate_singapore_itinerary
-from onemap_route import get_onemap_token, get_public_transit_route, parse_route_summary
+from onemap_route import get_onemap_token, get_public_transit_route, parse_route_summary, search_onemap_coords
 
 load_dotenv()
 
@@ -20,6 +20,17 @@ def build_verified_itinerary_pipeline(prompt: str, start_datetime: datetime):
 
     print("🔑 Step 2: Authenticating with SLA OneMap API...")
     token = get_onemap_token()
+
+    print("🔍 Step 2b: Geocoding venue names to verify exact coordinates...")
+    for stop in itinerary.stops:
+        verified_coords = search_onemap_coords(stop.venue_name)
+        if verified_coords:
+            real_lat, real_lng = verified_coords
+            print(f"  ✅ Verified {stop.venue_name}: ({real_lat}, {real_lng})")
+            stop.lat = real_lat
+            stop.lng = real_lng
+        else:
+            print(f"  ⚠️ Could not geocode {stop.venue_name}, keeping LLM coords.")
 
     print("🚇 Step 3: Verifying travel times & building chronological timeline...\n")
 
