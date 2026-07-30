@@ -6,7 +6,6 @@
   <component name="ChangeListManager">
     <list default="true" id="38107803-19b5-4aa9-91eb-727cdc0d235b" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/main.py" beforeDir="false" afterPath="$PROJECT_DIR$/main.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/onemap_route.py" beforeDir="false" afterPath="$PROJECT_DIR$/onemap_route.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -176,7 +175,15 @@
       <option name="project" value="LOCAL" />
       <updated>1785433039778</updated>
     </task>
-    <option name="localTasksCounter" value="6" />
+    <task id="LOCAL-00006" summary="working openai and onemap api with minor adjustments and Fact-Checking Pipeline backed by official onemap API">
+      <option name="closed" value="true" />
+      <created>1785434924788</created>
+      <option name="number" value="00006" />
+      <option name="presentableId" value="LOCAL-00006" />
+      <option name="project" value="LOCAL" />
+      <updated>1785434924788</updated>
+    </task>
+    <option name="localTasksCounter" value="7" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -196,6 +203,7 @@
     <MESSAGE value="test .env" />
     <MESSAGE value="working poc.py with .env" />
     <MESSAGE value="working poc.py and onemap api" />
-    <option name="LAST_COMMIT_MESSAGE" value="working poc.py and onemap api" />
+    <MESSAGE value="working openai and onemap api with minor adjustments and Fact-Checking Pipeline backed by official onemap API" />
+    <option name="LAST_COMMIT_MESSAGE" value="working openai and onemap api with minor adjustments and Fact-Checking Pipeline backed by official onemap API" />
   </component>
 </project>

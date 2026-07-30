@@ -33,26 +33,30 @@ def get_public_transit_route(
     token: str,
     departure_datetime: datetime
 ) -> dict:
-    """Queries SLA OneMap Routing API using the exact planned departure timestamp."""
+    """Queries SLA OneMap Routing API using exact planned departure timestamp."""
     url = "https://www.onemap.gov.sg/api/public/routingsvc/route"
 
-    # OneMap API required formatting
-    date_str = departure_datetime.strftime("%m-%d-%Y")  # MM-DD-YYYY
-    time_str = departure_datetime.strftime("%H:%M:%S")  # HH:MM:SS (24-hour)
+    date_str = departure_datetime.strftime("%m-%d-%Y")
+    time_str = departure_datetime.strftime("%H:%M:%S")
 
     headers = {"Authorization": f"Bearer {token}"}
     params = {
         "start": f"{start_lat},{start_lng}",
         "end": f"{end_lat},{end_lng}",
-        "routeType": "pt",        # Public Transport
-        "mode": "TRANSIT",        # Combines MRT + Bus + Walk
+        "routeType": "pt",
+        "mode": "TRANSIT",
         "date": date_str,
         "time": time_str,
-        "maxWalkDistance": "500",
+        "maxWalkDistance": "2000",  # Increased to allow bus access/egress walks
         "numItineraries": "1",
     }
 
     response = requests.get(url, headers=headers, params=params)
+
+    # Catch 404 (e.g. Lazarus Island, Pulau Ubin where no bus/MRT exists)
+    if response.status_code == 404:
+        return {"error": "NO_PUBLIC_TRANSIT_COVERAGE"}
+
     response.raise_for_status()
     return response.json()
 
@@ -89,16 +93,42 @@ def search_onemap_coords(venue_name: str) -> tuple[float, float] | None:
     return None
 
 
-def parse_route_summary(route_data: dict) -> dict:
-    """Parses raw OneMap transit JSON into a clean summary dict."""
+def parse_route_summary(
+    route_data: dict,
+    start_venue: str = "",
+    end_venue: str = ""
+) -> dict:
+    """
+    Parses complex OneMap transit JSON into a clean summary dictionary.
+    Handles API errors, empty itineraries, and offshore spatial snapping anomalies.
+    """
+    # 1. Handle explicit API error flags (e.g. 404 / 400 offshore island response)
+    if route_data.get("error") == "NO_PUBLIC_TRANSIT_COVERAGE":
+        return {
+            "real_commute_mins": 45,
+            "walk_distance_m": 0,
+            "step_by_step": "⛵ Offshore Ferry Transfer required (No direct MRT/Bus route available)",
+            "is_offshore": True,
+        }
+
+    if "error" in route_data:
+        return {
+            "real_commute_mins": 0,
+            "walk_distance_m": 0,
+            "step_by_step": f"Unable to route: {route_data.get('error')}",
+            "is_offshore": False,
+        }
+
     plan = route_data.get("plan", {})
     itineraries = plan.get("itineraries", [])
 
+    # 2. Handle empty itineraries (No public transport route found)
     if not itineraries:
         return {
             "real_commute_mins": 0,
             "walk_distance_m": 0,
             "step_by_step": "No direct public transit route found.",
+            "is_offshore": False,
         }
 
     best_route = itineraries[0]
@@ -106,20 +136,40 @@ def parse_route_summary(route_data: dict) -> dict:
     walk_dist = round(best_route.get("walkDistance", 0))
 
     legs = []
+    has_excessive_walk = False
+
     for leg in best_route.get("legs", []):
         mode = leg.get("mode")  # 'WALK', 'BUS', or 'SUBWAY'/'RAIL'
         route_name = leg.get("route", "")
         from_stop = leg.get("from", {}).get("name", "Start")
         to_stop = leg.get("to", {}).get("name", "End")
         duration = round(leg.get("duration", 0) / 60)
+        leg_dist = round(leg.get("distance", 0))
 
         if mode == "WALK":
-            legs.append(f"Walk {round(leg.get('distance', 0))}m ({duration} mins)")
+            # Flag suspicious walk legs (e.g., >1000m snapping across water/open grounds)
+            if leg_dist > 1000:
+                has_excessive_walk = True
+            legs.append(f"Walk {leg_dist}m ({duration} mins)")
         else:
             legs.append(f"Take {mode} {route_name} from '{from_stop}' to '{to_stop}' ({duration} mins)")
+
+    step_by_step = " ➔ ".join(legs)
+
+    # 3. Detect Ocean / Offshore Snapping Anomaly
+    offshore_keywords = ["lazarus", "st. john", "ubin", "kusu", "island"]
+    is_offshore = any(kw in (start_venue + end_venue).lower() for kw in offshore_keywords)
+
+    if is_offshore and has_excessive_walk:
+        # Override unrealistic ocean walk with a ferry transfer notice
+        step_by_step = (
+            "⛵ Ferry Transfer (~30-45 mins to mainland pier) ➔ " + step_by_step
+        )
+        total_mins += 45  # Add realistic ferry duration buffer
 
     return {
         "real_commute_mins": total_mins,
         "walk_distance_m": walk_dist,
-        "step_by_step": " ➔ ".join(legs),
+        "step_by_step": step_by_step,
+        "is_offshore": is_offshore,
     }
