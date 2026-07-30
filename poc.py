@@ -1,6 +1,10 @@
 from typing import List, Optional
 from pydantic import BaseModel, Field
 from openai import OpenAI
+from dotenv import load_dotenv
+
+# Loads the environment variables from the .env file into Python
+load_dotenv()
 
 
 # 1. Define the Pydantic Schema (The Data Contract)
