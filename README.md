@@ -1,136 +1,233 @@
-# 🇸🇬 DayOut SG — AI Singapore Itinerary Planner
+# 🇸🇬 DayOutPlanner — AI-Powered Singapore Travel Orchestrator
 
-> An intelligent, context-aware itinerary generator that orchestrates OpenAI LLM capabilities with official **SLA OneMap APIs** to produce chronologically verified, geographically logical day plans across Singapore.
+> An intelligent itinerary planning engine that combines **OpenAI GPT-4o Structured Outputs** with the **Google Maps Directions API** to generate geographically realistic, chronologically accurate travel plans across Singapore.
 
 ![Python](https://img.shields.io/badge/Python-3.10%2B-blue)
 ![OpenAI](https://img.shields.io/badge/OpenAI-GPT--4o--mini-green)
+![Google Maps](https://img.shields.io/badge/Google_Maps-Directions_API-orange)
 ![Pydantic](https://img.shields.io/badge/Pydantic-v2-red)
-![SLA OneMap](https://img.shields.io/badge/API-SLA%20OneMap-orange)
 ![License](https://img.shields.io/badge/License-MIT-brightgreen)
 
 ---
 
-## 🎯 The Engineering Problem
+# 📖 Overview
 
-Large Language Models (LLMs) are great creative planners, but they lack spatial awareness and reliable coordinate knowledge. Left unguided, LLMs frequently:
+Large Language Models are excellent at recommending places to visit but struggle with real-world travel logistics. They frequently underestimate travel times, recommend impractical walking routes, or generate itineraries that are not chronologically feasible.
 
-- **Hallucinate travel times** (e.g., claiming a 2 km walk takes 5 minutes in tropical weather).
-- **Invent invalid coordinates** that fall in neighboring countries or bodies of water, triggering API runtime failures.
-- **Ignore schedule dynamics** (e.g., calculating transit using the system execution time rather than the user's planned departure time).
+**DayOutPlanner** solves this problem by combining an LLM's planning capability with deterministic routing powered by the Google Maps Directions API.
 
-**DayOut SG** solves this by using the LLM solely as a **Creative Planner**, while enforcing a **Deterministic Fact-Checking Pipeline** backed by official Singapore Land Authority (SLA) public transit and geocoding services.
+The planner generates a structured itinerary, calculates exact public transport routes between every destination, maintains an evolving schedule throughout the day, and automatically recommends Taxi/Grab alternatives whenever walking becomes unreasonable.
+
+The result is a travel plan that is both creative and practically executable.
 
 ---
 
-## 🏗️ System Architecture
+# ✨ Features
+
+- 🤖 **AI Itinerary Generation**
+  - Uses OpenAI GPT-4o Structured Outputs to generate consistent travel plans.
+
+- 🗺️ **Google Maps Route Verification**
+  - Every destination is routed using the Google Maps Directions API instead of relying on LLM-estimated travel times.
+
+- 🚆 **Public Transport Planning**
+  - Supports MRT, buses, ferries and walking routes.
+
+- ⏰ **Chronological Schedule Engine**
+  - Maintains arrival and departure times across the entire itinerary.
+
+- 🚖 **Taxi / Grab Recommendation**
+  - Detects excessive walking (>800m) and estimates taxi fares and driving durations automatically.
+
+- 📍 **Singapore-Specific Prompt Engineering**
+  - Encourages realistic venue names, hawker centres, park entrances, and geographically clustered itineraries.
+
+- ✅ **Structured Outputs**
+  - Eliminates JSON parsing errors using OpenAI Structured Outputs with Pydantic.
+
+---
+
+# 🏗 System Architecture
 
 ```mermaid
 flowchart TD
-    A[User Prompt] --> B[1. LLM Extraction Layer<br/>OpenAI GPT-4o-mini + Pydantic]
 
-    B -->|Venue Names & Stay Durations| C[2. Geocoding Validation Layer<br/>SLA OneMap Elastic Search API]
+A[User Prompt]
 
-    C -->|Verified Coordinates| D[3. Sequential Schedule Engine<br/>SLA OneMap Public Transit API]
+A --> B[OpenAI GPT-4o-mini<br/>Structured Output]
 
-    D -->|Transit Steps + Updated Time| E[Verified Chronological Itinerary]
+B --> C[Chronological Schedule Engine]
 
-    subgraph Deterministic Fact Checker
-        C
-        D
-    end
+C --> D[Google Maps Directions API]
+
+D --> E[Transit Verification]
+
+E --> F[Taxi / Grab Fallback]
+
+F --> G[Final Timed Itinerary]
 ```
 
 ---
 
-## ✨ Key Features
+# ⚙️ How It Works
 
-- **Strict Type-Safety Contracts** using OpenAI Structured Outputs (`client.beta.chat.completions.parse`) with Pydantic v2, eliminating manual JSON parsing.
-- **Geocoding Validation Layer** that intercepts LLM-generated venue names and verifies them through SLA OneMap Elastic Search before routing.
-- **Dynamic Chronological Scheduling** that maintains a running itinerary clock and queries transit APIs using the user's planned departure time rather than system time.
-- **Turn-by-Turn Route Verification** replacing hallucinated travel estimates with official bus routes, MRT lines, transfers, and walking distances.
+1. The user submits a natural-language travel request.
+
+2. GPT-4o-mini generates a structured itinerary using Pydantic schemas.
+
+3. Every destination is routed through the Google Maps Directions API.
+
+4. The planner calculates:
+
+   - Public transport routes
+   - Walking distances
+   - Travel durations
+   - Arrival times
+   - Departure times
+
+5. If a walking segment exceeds **800 metres**, the planner:
+
+   - Calculates driving duration
+   - Estimates Singapore taxi fares
+   - Recommends Taxi/Grab as an alternative
+
+6. The final itinerary is returned as a chronologically consistent travel schedule.
 
 ---
 
-## 📂 Project Structure
+# 🎯 Engineering Challenges
+
+Large Language Models excel at generating activity recommendations but are unreliable when reasoning about transportation logistics.
+
+Common problems include:
+
+- Hallucinated travel durations
+- Unrealistic walking distances
+- Ignoring departure times
+- Inefficient route ordering
+- Inconsistent schedule calculations
+
+DayOutPlanner addresses these limitations by separating **creative planning** from **route verification**.
+
+The LLM is responsible for suggesting attractions and activities, while Google Maps provides deterministic routing information. A scheduling engine continuously updates the itinerary clock so every subsequent route is calculated using the correct planned departure time rather than the current system time.
+
+---
+
+# 📁 Repository Structure
 
 ```text
-dayOutPlanner/
-├── main.py              # Pipeline orchestration
-├── poc.py               # OpenAI Structured Output & Pydantic schemas
-├── onemap.py            # SLA OneMap authentication, search & routing
-├── .env.example         # Environment variable template
-├── requirements.txt     # Python dependencies
+DayOutPlanner/
+│
+├── main.py
+│   Core execution pipeline
+│
+├── gmaps_service.py
+│   Google Maps integration
+│   - Transit routing
+│   - Driving directions
+│   - Taxi fare estimation
+│
+├── helperFunction.py
+│   Utility functions
+│   - Fare calculations
+│   - Time formatting
+│   - Output helpers
+│
+├── tests/
+│   └── test_helperFunction.py
+│
+├── .env.example
+│
+├── .gitignore
+│
+├── requirements.txt
+│
 └── README.md
 ```
 
 ---
 
-## 🛠 Tech Stack
+# 🛠 Technology Stack
 
-- **Language:** Python 3.10+
-- **AI Infrastructure:** OpenAI GPT-4o-mini with Structured Outputs
-- **Validation:** Pydantic v2
-- **GIS & Routing:** SLA OneMap APIs
-- **Environment Management:** python-dotenv
+| Component | Technology |
+|-----------|------------|
+| Programming Language | Python 3.10+ |
+| AI Model | OpenAI GPT-4o-mini |
+| Structured Outputs | Pydantic v2 |
+| Mapping & Routing | Google Maps Directions API |
+| Environment Variables | python-dotenv |
+| Testing | unittest / pytest |
 
 ---
 
-## 🚀 Getting Started
+# 🚀 Getting Started
 
-### Prerequisites
+## Prerequisites
 
 - Python 3.10+
-- An OpenAI API key
-- A free SLA OneMap Developer account
+- OpenAI API Key
+- Google Maps API Key with **Directions API** enabled
 
-### 1. Clone the Repository
+---
 
-```bash
-git clone https://github.com/yourusername/dayOutPlanner.git
-cd dayOutPlanner
-```
-
-### 2. Create a Virtual Environment
-
-macOS / Linux
+## 1. Clone the Repository
 
 ```bash
-python3 -m venv venv
-source venv/bin/activate
+git clone https://github.com/Sherlock-YH/DayOutPlanner.git
+
+cd DayOutPlanner
 ```
 
-Windows
+---
+
+## 2. Create a Virtual Environment
+
+### macOS / Linux
+
+```bash
+python3 -m venv .venv
+
+source .venv/bin/activate
+```
+
+### Windows
 
 ```powershell
-python -m venv venv
-venv\Scripts\activate
+python -m venv .venv
+
+.venv\Scripts\activate
 ```
 
-### 3. Install Dependencies
+---
+
+## 3. Install Dependencies
 
 ```bash
 pip install -r requirements.txt
 ```
 
-or
+---
+
+## 4. Configure Environment Variables
+
+Copy the example environment file.
 
 ```bash
-pip install openai pydantic requests python-dotenv
+cp .env.example .env
 ```
 
-### 4. Configure Environment Variables
-
-Create a `.env` file in the project root.
+Edit `.env`:
 
 ```env
-OPENAI_API_KEY=sk-proj-your-openai-key
-ONEMAP_EMAIL=your_onemap_email@example.com
-ONEMAP_PASSWORD=your_onemap_password
+OPENAI_API_KEY=sk-proj-your-openai-api-key
+GOOGLE_MAPS_API_KEY=your-google-maps-api-key
 ```
 
 ---
 
-## ▶️ Run the Application
+# ▶️ Running the Application
+
+Run the planner:
 
 ```bash
 python main.py
@@ -138,28 +235,88 @@ python main.py
 
 ---
 
-## 🛡️ System Reliability & Edge Cases
+# 🖥 Example Output
 
-| Edge Case | Typical LLM Behavior | DayOut SG Solution |
-|-----------|----------------------|--------------------|
-| **Coordinate Hallucination** | Generates coordinates outside Singapore (e.g., latitude `1.798`), causing routing failures. | Validates every venue through SLA OneMap Elastic Search and replaces hallucinated coordinates with official values. |
-| **Schedule Misalignment** | Uses current system time when querying transit APIs, producing incorrect routes for future itineraries. | Maintains a sequential itinerary clock and queries OneMap using the user's planned departure time. |
-| **Excessive Walking Routes** | Suggests 2 km+ walks between attractions. | Limits walking distance (`maxWalkDistance = 500 m`) and automatically requests multimodal bus/MRT routes instead. |
-| **Offshore / Non-Transit Locations** | Recommends destinations with no bus/MRT access (e.g. Lazarus Island, Pulau Ubin), causing HTTP 404 routing errors. | Intercepts HTTP 404 transit exceptions and injects a custom ferry/private transfer fallback notice without breaking the timeline engine. |
+```text
+🤖 Generating itinerary...
+
+📍 Stop #1
+Singapore Botanic Gardens
+
+09:00 AM – 10:30 AM
+
+↓
+
+🚍 Public Transit
+Walk 123 m
+
+↓
+
+📍 Stop #2
+The Halia
+
+10:32 AM – 11:32 AM
+
+↓
+
+🚖 Taxi Recommended
+
+16 mins
+Estimated Fare:
+$14–18 SGD
+
+↓
+
+📍 Stop #3
+MacRitchie Reservoir
+```
 
 ---
 
-## 📖 How It Works
+# 🧪 Running Tests
 
-1. The user submits a natural-language itinerary request.
-2. GPT-4o-mini extracts structured venues and activity durations using Pydantic schemas.
-3. Every venue is validated through the SLA OneMap Elastic Search API.
-4. Verified coordinates are passed to the SLA OneMap Public Transit API.
-5. A sequential itinerary clock updates departure times after every activity.
-6. The final itinerary contains verified locations, realistic transit times, and chronological scheduling.
+Using Python's unittest:
+
+```bash
+python -m unittest discover tests
+```
+
+Using pytest:
+
+```bash
+pytest
+```
 
 ---
 
-## 📜 License
+# 🔮 Future Improvements
+
+- Interactive web interface
+- Multi-day itinerary generation
+- Budget-aware trip planning
+- Weather-aware scheduling
+- Attraction opening-hour validation
+- Restaurant reservation integration
+- Hotel-aware route optimisation
+- User preference learning
+- Export itinerary to Google Calendar
+- PDF itinerary generation
+
+---
+
+# 📄 License
 
 This project is licensed under the MIT License.
+
+---
+
+# 👤 Author
+
+**Sherlock Y**
+
+- GitHub: https://github.com/Sherlock-YH
+- Portfolio: https://www.sherlock-YH.top
+
+---
+
+> Built to demonstrate practical applications of Large Language Models by combining AI planning with deterministic mapping and routing services for reliable real-world itinerary generation.
