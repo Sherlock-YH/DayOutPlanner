@@ -5,9 +5,8 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="38107803-19b5-4aa9-91eb-727cdc0d235b" name="Changes" comment="">
+      <change afterPath="$PROJECT_DIR$/gmaps_service.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/onemap_route.py" beforeDir="false" afterPath="$PROJECT_DIR$/onemap_route.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/poc.py" beforeDir="false" afterPath="$PROJECT_DIR$/poc.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -192,8 +191,19 @@
       <option name="project" value="LOCAL" />
       <updated>1785436026425</updated>
     </task>
-    <option name="localTasksCounter" value="8" />
+    <task id="LOCAL-00008" summary="update offshore error&#10;modify the prompt">
+      <option name="closed" value="true" />
+      <created>1785436895538</created>
+      <option name="number" value="00008" />
+      <option name="presentableId" value="LOCAL-00008" />
+      <option name="project" value="LOCAL" />
+      <updated>1785436895538</updated>
+    </task>
+    <option name="localTasksCounter" value="9" />
     <servers />
+  </component>
+  <component name="UnknownFeatures">
+    <option featureType="com.intellij.fileTypeFactory" implementationName=".env" />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
     <option name="TAB_STATES">
@@ -214,6 +224,7 @@
     <MESSAGE value="working poc.py and onemap api" />
     <MESSAGE value="working openai and onemap api with minor adjustments and Fact-Checking Pipeline backed by official onemap API" />
     <MESSAGE value="Update catch of offshore destinations&#10;Increased to allow bus access/egress walks minor adjustments and Fact-Checking Pipeline backed by official onemap API" />
-    <option name="LAST_COMMIT_MESSAGE" value="Update catch of offshore destinations&#10;Increased to allow bus access/egress walks minor adjustments and Fact-Checking Pipeline backed by official onemap API" />
+    <MESSAGE value="update offshore error&#10;modify the prompt" />
+    <option name="LAST_COMMIT_MESSAGE" value="update offshore error&#10;modify the prompt" />
   </component>
 </project>
