@@ -5,8 +5,6 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="38107803-19b5-4aa9-91eb-727cdc0d235b" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/helperFunction.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/tests/test_helperFunction.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/gmaps_service.py" beforeDir="false" afterPath="$PROJECT_DIR$/gmaps_service.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/main.py" beforeDir="false" afterPath="$PROJECT_DIR$/main.py" afterDir="false" />
@@ -39,19 +37,19 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent"><![CDATA[{
-  "keyToString": {
-    "Python tests.Python tests for test_helperFunction.TestTaxiFareCalculator.test_short_distance_returns_minimum_fare.executor": "Run",
-    "Python tests.Python tests in test_helperFunction.py.executor": "Run",
-    "Python.main.executor": "Run",
-    "Python.onemap_route.executor": "Run",
-    "Python.poc.executor": "Run",
-    "RunOnceActivity.OpenProjectViewOnStart": "true",
-    "RunOnceActivity.ShowReadmeOnStart": "true",
-    "git-widget-placeholder": "main"
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;Python tests.Python tests for test_helperFunction.TestTaxiFareCalculator.test_short_distance_returns_minimum_fare.executor&quot;: &quot;Run&quot;,
+    &quot;Python tests.Python tests in test_helperFunction.py.executor&quot;: &quot;Run&quot;,
+    &quot;Python.main.executor&quot;: &quot;Run&quot;,
+    &quot;Python.onemap_route.executor&quot;: &quot;Run&quot;,
+    &quot;Python.poc.executor&quot;: &quot;Run&quot;,
+    &quot;RunOnceActivity.OpenProjectViewOnStart&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;git-widget-placeholder&quot;: &quot;main&quot;
   }
-}]]></component>
-  <component name="RunManager" selected="Python tests.Python tests for test_helperFunction.TestTaxiFareCalculator.test_short_distance_returns_minimum_fare">
+}</component>
+  <component name="RunManager" selected="Python.main">
     <configuration name="main" type="PythonConfigurationType" factoryName="Python" nameIsGenerated="true">
       <module name="dayOutPlanner" />
       <option name="ENV_FILES" value="" />
@@ -245,7 +243,15 @@
       <option name="project" value="LOCAL" />
       <updated>1785517934594</updated>
     </task>
-    <option name="localTasksCounter" value="10" />
+    <task id="LOCAL-00010" summary="Add helper function and test for it">
+      <option name="closed" value="true" />
+      <created>1785519666443</created>
+      <option name="number" value="00010" />
+      <option name="presentableId" value="LOCAL-00010" />
+      <option name="project" value="LOCAL" />
+      <updated>1785519666443</updated>
+    </task>
+    <option name="localTasksCounter" value="11" />
     <servers />
   </component>
   <component name="UnknownFeatures">
@@ -272,6 +278,7 @@
     <MESSAGE value="Update catch of offshore destinations&#10;Increased to allow bus access/egress walks minor adjustments and Fact-Checking Pipeline backed by official onemap API" />
     <MESSAGE value="update offshore error&#10;modify the prompt" />
     <MESSAGE value="Add gmap API to replace oneMap for better accuracy" />
-    <option name="LAST_COMMIT_MESSAGE" value="Add gmap API to replace oneMap for better accuracy" />
+    <MESSAGE value="Add helper function and test for it" />
+    <option name="LAST_COMMIT_MESSAGE" value="Add helper function and test for it" />
   </component>
 </project>
