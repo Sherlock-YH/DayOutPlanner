@@ -1,0 +1,79 @@
+from datetime import datetime
+
+
+def calculate_sg_taxi_fare(
+        distance_meters: int,
+        duration_seconds: int,
+        departure_datetime: datetime | None = None
+) -> dict:
+    """
+    Calculates estimated Singapore Taxi / Ride-Hailing (Grab/Gojek) fare range
+    based on Google Maps driving distance and travel duration.
+
+    Standard SG Metered Fare Structure (ComfortDelGro / Trans-Cab baseline):
+    - Flagdown (includes 1st km): $4.50 SGD
+    - Every 400m thereafter (up to 10km): $0.26 SGD
+    - Every 350m thereafter (above 10km): $0.26 SGD
+    - Every 45 seconds of travel/waiting time: $0.26 SGD
+    - Late Night Surcharge (00:00 - 05:59): +50% on metered fare
+    - Peak Hour Surcharge (07:00 - 09:59 Mon-Fri, 17:00 - 23:59 Daily): +25%
+    """
+    dist_km = distance_meters / 1000.0
+    drive_mins = round(duration_seconds / 60)
+
+    # 1. Flagdown Base (covers first 1.0 km)
+    base_fare = 4.50
+
+    # 2. Distance Fare Calculation
+    distance_cost = 0.0
+    if dist_km > 1.0:
+        if dist_km <= 10.0:
+            # Tier 1: 1km to 10km (every 400m = $0.26)
+            remaining_km = dist_km - 1.0
+            distance_cost = (remaining_km / 0.40) * 0.26
+        else:
+            # Tier 1: 1km to 10km
+            tier1_cost = (9.0 / 0.40) * 0.26
+            # Tier 2: Above 10km (every 350m = $0.26)
+            remaining_km = dist_km - 10.0
+            tier2_cost = (remaining_km / 0.35) * 0.26
+            distance_cost = tier1_cost + tier2_cost
+
+    # 3. Time Fare Calculation (traffic slowdown / waiting time factor)
+    # Average travel time component (~$0.26 per 45s)
+    time_cost = (duration_seconds / 45.0) * 0.26
+
+    # Metered Subtotal
+    subtotal = base_fare + distance_cost + time_cost
+
+    # 4. Surcharge Multipliers based on Departure Time
+    surcharge_multiplier = 1.0
+    if departure_datetime:
+        hour = departure_datetime.hour
+        is_weekday = departure_datetime.weekday() < 5  # Mon - Fri
+
+        # Late Night (00:00 AM - 05:59 AM): +50%
+        if 0 <= hour < 6:
+            surcharge_multiplier = 1.50
+        # Morning Peak (07:00 AM - 09:59 AM, Mon-Fri): +25%
+        elif is_weekday and (7 <= hour < 10):
+            surcharge_multiplier = 1.25
+        # Evening Peak (05:00 PM - 11:59 PM, Daily): +25%
+        elif 17 <= hour <= 23:
+            surcharge_multiplier = 1.25
+
+    # Calculate Base Estimate
+    estimated_fare = subtotal * surcharge_multiplier
+
+    # Standard SG Taxi/Ride-Hail Minimum Fare threshold is ~$6.00 SGD
+    min_fare = max(6.0, round(estimated_fare))
+
+    # Upper bound includes buffer for dynamic surge pricing (Grab/Gojek) or ERP tolls
+    max_fare = round(min_fare * 1.30)
+
+    return {
+        "drive_mins": drive_mins,
+        "min_fare_sgd": int(min_fare),
+        "max_fare_sgd": int(max_fare),
+        "formatted_estimate": f"~{drive_mins} mins (${int(min_fare)}-${int(max_fare)} SGD)",
+    }
