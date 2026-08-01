@@ -1,0 +1,18 @@
+{
+  "title": "1-Day Outdoor Nature and Local Food Tour",
+  "summary": "Sample itinerary for testing spatial routing.",
+  "stops": [
+    {
+      "stop_number": 1,
+      "venue_name": "National Gallery Singapore",
+      "stay_duration_mins": 90,
+      "why_go": "Explore modern art."
+    },
+    {
+      "stop_number": 2,
+      "venue_name": "The Coffee Academics at Raffles City",
+      "stay_duration_mins": 60,
+      "why_go": "Coffee break nearby."
+    }
+  ]
+}
