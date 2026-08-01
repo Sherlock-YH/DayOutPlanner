@@ -5,7 +5,12 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="38107803-19b5-4aa9-91eb-727cdc0d235b" name="Changes" comment="">
+      <change afterPath="$PROJECT_DIR$/dayoutplanner-web/components/ItineraryMap.tsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/dayoutplanner-web/components/Map.tsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/tests/fixtures/nature_food_plan.json" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/tests/test_routing.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/gmaps_service.py" beforeDir="false" afterPath="$PROJECT_DIR$/gmaps_service.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/main.py" beforeDir="false" afterPath="$PROJECT_DIR$/main.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -35,19 +40,22 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent">{
-  &quot;keyToString&quot;: {
-    &quot;Python tests.Python tests for test_helperFunction.TestTaxiFareCalculator.test_short_distance_returns_minimum_fare.executor&quot;: &quot;Run&quot;,
-    &quot;Python tests.Python tests in test_helperFunction.py.executor&quot;: &quot;Run&quot;,
-    &quot;Python.main.executor&quot;: &quot;Run&quot;,
-    &quot;Python.onemap_route.executor&quot;: &quot;Run&quot;,
-    &quot;Python.poc.executor&quot;: &quot;Run&quot;,
-    &quot;RunOnceActivity.OpenProjectViewOnStart&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
-    &quot;git-widget-placeholder&quot;: &quot;main&quot;
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "Python tests.Python tests for test_helperFunction.TestTaxiFareCalculator.test_short_distance_returns_minimum_fare.executor": "Run",
+    "Python tests.Python tests for test_routing.TestRoutingEngine.executor": "Run",
+    "Python tests.Python tests in test_helperFunction.py.executor": "Run",
+    "Python tests.Python tests in test_routing.py.executor": "Run",
+    "Python tests.Python tests in test_same_building_routing.py.executor": "Run",
+    "Python.main.executor": "Run",
+    "Python.onemap_route.executor": "Run",
+    "Python.poc.executor": "Run",
+    "RunOnceActivity.OpenProjectViewOnStart": "true",
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "git-widget-placeholder": "main"
   }
-}</component>
-  <component name="RunManager" selected="Python.main">
+}]]></component>
+  <component name="RunManager" selected="Python tests.Python tests in test_same_building_routing.py">
     <configuration name="main" type="PythonConfigurationType" factoryName="Python" nameIsGenerated="true">
       <module name="dayOutPlanner" />
       <option name="ENV_FILES" value="" />
@@ -62,50 +70,6 @@
       <option name="ADD_CONTENT_ROOTS" value="true" />
       <option name="ADD_SOURCE_ROOTS" value="true" />
       <option name="SCRIPT_NAME" value="$PROJECT_DIR$/main.py" />
-      <option name="PARAMETERS" value="" />
-      <option name="SHOW_COMMAND_LINE" value="false" />
-      <option name="EMULATE_TERMINAL" value="false" />
-      <option name="MODULE_MODE" value="false" />
-      <option name="REDIRECT_INPUT" value="false" />
-      <option name="INPUT_FILE" value="" />
-      <method v="2" />
-    </configuration>
-    <configuration name="onemap_route" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
-      <module name="dayOutPlanner" />
-      <option name="ENV_FILES" value="" />
-      <option name="INTERPRETER_OPTIONS" value="" />
-      <option name="PARENT_ENVS" value="true" />
-      <envs>
-        <env name="PYTHONUNBUFFERED" value="1" />
-      </envs>
-      <option name="SDK_HOME" value="" />
-      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$" />
-      <option name="IS_MODULE_SDK" value="true" />
-      <option name="ADD_CONTENT_ROOTS" value="true" />
-      <option name="ADD_SOURCE_ROOTS" value="true" />
-      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/onemap_route.py" />
-      <option name="PARAMETERS" value="" />
-      <option name="SHOW_COMMAND_LINE" value="false" />
-      <option name="EMULATE_TERMINAL" value="false" />
-      <option name="MODULE_MODE" value="false" />
-      <option name="REDIRECT_INPUT" value="false" />
-      <option name="INPUT_FILE" value="" />
-      <method v="2" />
-    </configuration>
-    <configuration name="poc" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
-      <module name="dayOutPlanner" />
-      <option name="ENV_FILES" value="" />
-      <option name="INTERPRETER_OPTIONS" value="" />
-      <option name="PARENT_ENVS" value="true" />
-      <envs>
-        <env name="PYTHONUNBUFFERED" value="1" />
-      </envs>
-      <option name="SDK_HOME" value="" />
-      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$" />
-      <option name="IS_MODULE_SDK" value="true" />
-      <option name="ADD_CONTENT_ROOTS" value="true" />
-      <option name="ADD_SOURCE_ROOTS" value="true" />
-      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/poc.py" />
       <option name="PARAMETERS" value="" />
       <option name="SHOW_COMMAND_LINE" value="false" />
       <option name="EMULATE_TERMINAL" value="false" />
@@ -129,6 +93,21 @@
       <option name="_new_targetType" value="&quot;PYTHON&quot;" />
       <method v="2" />
     </configuration>
+    <configuration name="Python tests for test_routing.TestRoutingEngine" type="tests" factoryName="Autodetect" temporary="true" nameIsGenerated="true">
+      <module name="dayOutPlanner" />
+      <option name="ENV_FILES" value="" />
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <option name="SDK_HOME" value="" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/tests" />
+      <option name="IS_MODULE_SDK" value="true" />
+      <option name="ADD_CONTENT_ROOTS" value="true" />
+      <option name="ADD_SOURCE_ROOTS" value="true" />
+      <option name="_new_additionalArguments" value="&quot;&quot;" />
+      <option name="_new_target" value="&quot;test_routing.TestRoutingEngine&quot;" />
+      <option name="_new_targetType" value="&quot;PYTHON&quot;" />
+      <method v="2" />
+    </configuration>
     <configuration name="Python tests in test_helperFunction.py" type="tests" factoryName="Autodetect" temporary="true" nameIsGenerated="true">
       <module name="dayOutPlanner" />
       <option name="ENV_FILES" value="" />
@@ -144,12 +123,43 @@
       <option name="_new_targetType" value="&quot;PATH&quot;" />
       <method v="2" />
     </configuration>
+    <configuration name="Python tests in test_routing.py" type="tests" factoryName="Autodetect" temporary="true" nameIsGenerated="true">
+      <module name="dayOutPlanner" />
+      <option name="ENV_FILES" value="" />
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <option name="SDK_HOME" value="" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/tests" />
+      <option name="IS_MODULE_SDK" value="true" />
+      <option name="ADD_CONTENT_ROOTS" value="true" />
+      <option name="ADD_SOURCE_ROOTS" value="true" />
+      <option name="_new_additionalArguments" value="&quot;&quot;" />
+      <option name="_new_target" value="&quot;$PROJECT_DIR$/tests/test_routing.py&quot;" />
+      <option name="_new_targetType" value="&quot;PATH&quot;" />
+      <method v="2" />
+    </configuration>
+    <configuration name="Python tests in test_same_building_routing.py" type="tests" factoryName="Autodetect" temporary="true" nameIsGenerated="true">
+      <module name="dayOutPlanner" />
+      <option name="ENV_FILES" value="" />
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <option name="SDK_HOME" value="" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/tests" />
+      <option name="IS_MODULE_SDK" value="true" />
+      <option name="ADD_CONTENT_ROOTS" value="true" />
+      <option name="ADD_SOURCE_ROOTS" value="true" />
+      <option name="_new_additionalArguments" value="&quot;&quot;" />
+      <option name="_new_target" value="&quot;$PROJECT_DIR$/tests/test_same_building_routing.py&quot;" />
+      <option name="_new_targetType" value="&quot;PATH&quot;" />
+      <method v="2" />
+    </configuration>
     <recent_temporary>
       <list>
+        <item itemvalue="Python tests.Python tests in test_same_building_routing.py" />
+        <item itemvalue="Python tests.Python tests in test_routing.py" />
+        <item itemvalue="Python tests.Python tests for test_routing.TestRoutingEngine" />
         <item itemvalue="Python tests.Python tests for test_helperFunction.TestTaxiFareCalculator.test_short_distance_returns_minimum_fare" />
         <item itemvalue="Python tests.Python tests in test_helperFunction.py" />
-        <item itemvalue="Python.onemap_route" />
-        <item itemvalue="Python.poc" />
       </list>
     </recent_temporary>
   </component>
@@ -257,7 +267,23 @@
       <option name="project" value="LOCAL" />
       <updated>1785520613183</updated>
     </task>
-    <option name="localTasksCounter" value="12" />
+    <task id="LOCAL-00012" summary="add CORSMiddleware to backend entrypoint">
+      <option name="closed" value="true" />
+      <created>1785555386869</created>
+      <option name="number" value="00012" />
+      <option name="presentableId" value="LOCAL-00012" />
+      <option name="project" value="LOCAL" />
+      <updated>1785555386869</updated>
+    </task>
+    <task id="LOCAL-00013" summary="Zero API Cost: @patch(&quot;gmaps_service.gmaps&quot;) prevents calls to the live Google Maps API during tests.&#10;&#10;Deterministic Edge Case Testing: Google Maps ZERO_RESULTS API payloads can be hard to reproduce on demand with live queries. Mocking lets you force that exact edge case instantly in 0.002s.">
+      <option name="closed" value="true" />
+      <created>1785557603074</created>
+      <option name="number" value="00013" />
+      <option name="presentableId" value="LOCAL-00013" />
+      <option name="project" value="LOCAL" />
+      <updated>1785557603074</updated>
+    </task>
+    <option name="localTasksCounter" value="14" />
     <servers />
   </component>
   <component name="UnknownFeatures">
@@ -286,6 +312,8 @@
     <MESSAGE value="Add gmap API to replace oneMap for better accuracy" />
     <MESSAGE value="Add helper function and test for it" />
     <MESSAGE value="Refine the main.py to work with gmap API&#10;Add excess walk checker in gmaps_service.py&#10;Add functions to suggest ride hailing for long walking distance" />
-    <option name="LAST_COMMIT_MESSAGE" value="Refine the main.py to work with gmap API&#10;Add excess walk checker in gmaps_service.py&#10;Add functions to suggest ride hailing for long walking distance" />
+    <MESSAGE value="add CORSMiddleware to backend entrypoint" />
+    <MESSAGE value="Zero API Cost: @patch(&quot;gmaps_service.gmaps&quot;) prevents calls to the live Google Maps API during tests.&#10;&#10;Deterministic Edge Case Testing: Google Maps ZERO_RESULTS API payloads can be hard to reproduce on demand with live queries. Mocking lets you force that exact edge case instantly in 0.002s." />
+    <option name="LAST_COMMIT_MESSAGE" value="Zero API Cost: @patch(&quot;gmaps_service.gmaps&quot;) prevents calls to the live Google Maps API during tests.&#10;&#10;Deterministic Edge Case Testing: Google Maps ZERO_RESULTS API payloads can be hard to reproduce on demand with live queries. Mocking lets you force that exact edge case instantly in 0.002s." />
   </component>
 </project>

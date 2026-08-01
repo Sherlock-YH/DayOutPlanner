@@ -1,3 +1,5 @@
+# gmaps_service.py
+
 import os
 from datetime import datetime
 import googlemaps
@@ -10,9 +12,9 @@ gmaps = googlemaps.Client(key=API_KEY) if API_KEY else None
 
 
 def calculate_sg_taxi_fare(
-        distance_meters: int,
-        duration_seconds: int,
-        departure_datetime: datetime | None = None
+    distance_meters: int,
+    duration_seconds: int,
+    departure_datetime: datetime | None = None
 ) -> dict:
     """
     Calculates estimated Singapore Taxi / Ride-Hailing (Grab/Gojek) fare range
@@ -62,9 +64,9 @@ def calculate_sg_taxi_fare(
 
 
 def get_driving_fallback(
-        start_venue: str,
-        end_venue: str,
-        departure_datetime: datetime
+    start_venue: str,
+    end_venue: str,
+    departure_datetime: datetime
 ) -> dict | None:
     """
     Queries Google Maps Directions API in DRIVING mode to calculate
@@ -108,9 +110,9 @@ def get_driving_fallback(
 
 
 def get_transit_route_by_name(
-        start_venue: str,
-        end_venue: str,
-        departure_datetime: datetime
+    start_venue: str,
+    end_venue: str,
+    departure_datetime: datetime
 ) -> dict:
     """
     Queries Google Directions API using human-readable venue names directly.
@@ -131,6 +133,18 @@ def get_transit_route_by_name(
         )
 
         if not directions:
+            start_lower = start_venue.lower()
+            end_lower = end_venue.lower()
+
+            if start_lower in end_lower or end_lower in start_lower or "inside" in end_lower:
+                return {
+                    "real_commute_mins": 0,
+                    "walk_distance_m": 0,
+                    "step_by_step": "🚶 Located inside or adjacent to current venue (<1 min walk)",
+                    "start_coords": None,
+                    "end_coords": None,
+                }
+
             return {
                 "real_commute_mins": 0,
                 "walk_distance_m": 0,
@@ -140,8 +154,16 @@ def get_transit_route_by_name(
             }
 
         leg = directions[0]["legs"][0]
-        start_coords = (leg["start_location"]["lat"], leg["start_location"]["lng"])
-        end_coords = (leg["end_location"]["lat"], leg["end_location"]["lng"])
+
+        # 🔑 FIX: Return dicts instead of tuples so main.py can access .get('lat') / .get('lng')
+        start_coords = {
+            "lat": leg["start_location"]["lat"],
+            "lng": leg["start_location"]["lng"],
+        }
+        end_coords = {
+            "lat": leg["end_location"]["lat"],
+            "lng": leg["end_location"]["lng"],
+        }
 
         total_duration_mins = round(leg["duration"]["value"] / 60)
         total_distance_m = leg["distance"]["value"]
@@ -166,17 +188,21 @@ def get_transit_route_by_name(
 
                 if vehicle_type == "FERRY":
                     legs_summary.append(
-                        f"⛵ Take Ferry ({line_name}) from '{dep_stop}' to '{arr_stop}' ({dur_mins} mins)")
+                        f"⛵ Take Ferry ({line_name}) from '{dep_stop}' to '{arr_stop}' ({dur_mins} mins)"
+                    )
                 elif vehicle_type == "SUBWAY":
-                    legs_summary.append(f"🚇 Take MRT {line_name} from '{dep_stop}' to '{arr_stop}' ({dur_mins} mins)")
+                    legs_summary.append(
+                        f"🚇 Take MRT {line_name} from '{dep_stop}' to '{arr_stop}' ({dur_mins} mins)"
+                    )
                 else:
-                    legs_summary.append(f"🚌 Take Bus {line_name} from '{dep_stop}' to '{arr_stop}' ({dur_mins} mins)")
+                    legs_summary.append(
+                        f"🚌 Take Bus {line_name} from '{dep_stop}' to '{arr_stop}' ({dur_mins} mins)"
+                    )
 
             elif travel_mode == "WALKING":
                 dist_m = step["distance"]["value"]
                 dur_mins = round(step["duration"]["value"] / 60)
 
-                # Flag any walking leg that exceeds 800 meters
                 if dist_m > 800:
                     has_excessive_walk = True
 
@@ -185,7 +211,6 @@ def get_transit_route_by_name(
 
         transit_summary_str = " ➔ ".join(legs_summary)
 
-        # If pure walk or excessive walking leg detected, prepend a taxi option
         if has_excessive_walk or (is_pure_walk and total_distance_m > 800):
             driving_info = get_driving_fallback(start_venue, end_venue, departure_datetime)
 

@@ -7,19 +7,6 @@ from pydantic import BaseModel, Field
 
 # Import our new Google Maps transit service
 from gmaps_service import get_transit_route_by_name
-from fastapi import FastAPI
-from fastapi.middleware.cors import CORSMiddleware
-
-app = FastAPI(title="DayOutPlanner API")
-
-# Enable CORS for Next.js dev server
-app.add_middleware(
-    CORSMiddleware,
-    allow_origins=["http://localhost:3000"],
-    allow_credentials=True,
-    allow_methods=["*"],
-    allow_headers=["*"],
-)
 
 load_dotenv()
 client = OpenAI(api_key=os.getenv("OPENAI_API_KEY"))
@@ -28,16 +15,15 @@ client = OpenAI(api_key=os.getenv("OPENAI_API_KEY"))
 # ==========================================
 # 1. Pydantic Schema (No Lat/Lng Needed!)
 # ==========================================
+# Define Pydantic schema for structured output
 class ItineraryStop(BaseModel):
-    venue_name: str = Field(
-        description="Exact well-known name of the venue in Singapore (e.g., 'National Gallery Singapore', 'Maxwell Food Centre')."
-    )
-    category: str = Field(description="Category e.g., 'Sightseeing', 'Food', 'Nature'")
-    stay_duration_minutes: int = Field(description="Recommended stay duration in minutes.")
-    why_go: str = Field(description="Short 1-sentence reason to visit.")
+    stop_number: int
+    venue_name: str
+    stay_duration_mins: int
+    why_go: str
 
 
-class ItineraryResponse(BaseModel):
+class ItineraryPlan(BaseModel):
     title: str
     summary: str
     stops: list[ItineraryStop]
@@ -46,29 +32,106 @@ class ItineraryResponse(BaseModel):
 # ==========================================
 # 2. LLM Planner Generator
 # ==========================================
-def generate_itinerary_plan(user_prompt: str) -> ItineraryResponse:
-    """Uses GPT-4o-mini to generate structured venue stops based on user preferences."""
+def generate_itinerary_plan(user_prompt: str) -> dict:
+    """
+    1. Calls OpenAI GPT-4o with structured outputs to get stops.
+    2. Runs Google Maps Transit router between sequential stops.
+    3. Calculates real arrival/departure clock times.
+    4. Attaches 'transit_to_next' to each stop object.
+    5. Returns a rich, clean dictionary for the FastAPI/Next.js frontend.
+    """
     system_prompt = (
         "You are an expert Singapore travel planner and spatial logistics coordinator.\n\n"
         "RULES FOR ITINERARY STOPS:\n"
-        "1. DESTINATIONS ONLY: Every stop MUST be a genuine point of interest. NEVER include transit stations or MRT stops as itinerary stops.\n"
-        "2. REAL & OPERATIONAL VENUES ONLY: Use active, currently operating venue names in Singapore (e.g., use 'Bee's Knees at Garage' or 'The Halia' instead of closed venues like 'Food for Thought'). For local food, name the Hawker Centre or Food Complex (e.g., 'Maxwell Food Centre', 'Chinatown Complex') rather than individual stall names.\n"
-        "3. IMMEDIATE PAIRING: When pairing an outdoor attraction with a meal stop, select a dining option located directly inside or within a 5-minute walk of that attraction before moving to another district.\n"
-        "4. GEOGRAPHIC EFFICIENCY: Order stops logically across Singapore to minimize transit time.\n"
-        "5. SPECIFIC PARK ENTRANCES: For sprawling nature reserves, specify a known entrance (e.g., 'MacRitchie Reservoir Mushroom Cafe Entrance', 'East Coast Park Parkland Green').\n"
-        "6. NO DISTANCE CLAIMS IN RATIONALE: Do not make proximity or distance claims in 'why_go'. Leave all distance and travel calculations entirely to the routing engine."
+        "1. DESTINATIONS ONLY: Every stop MUST be a genuine point of interest. NEVER include transit stations or MRT stops.\n"
+        "2. OPERATIONAL & CURRENT VENUES ONLY: Use active, currently operating venues in Singapore. (DO NOT use closed venues like Chinatown Heritage Centre or Food for Thought).\n"
+        "3. STRICT THEME ADHERENCE: Strictly match the user's prompt (e.g., if 'INDOOR' is requested, choose air-conditioned museums, glass domes, malls, and covered hawker complexes like Lau Pa Sat—DO NOT include outdoor walking streets like Haji Lane or East Coast Park).\n"
+        "4. NO GEOGRAPHIC BACKTRACKING: Fully explore a single neighborhood/district (e.g., Marina Bay, Bugis, Chinatown) before moving to the next. NEVER route the user back to a previously visited neighborhood later in the day.\n"
+        "5. SAME-BUILDING PAIRING: When pairing an attraction with dining in the same building (e.g., museum cafe), explicitly state the building in both stop names so the routing engine recognizes proximity.\n"
+        "6. SPECIFIC PARK ENTRANCES: Specify known entrances (e.g., 'MacRitchie Reservoir Mushroom Cafe Entrance').\n"
+        "7. NO DISTANCE CLAIMS IN RATIONALE: Leave all transit calculations entirely to the routing engine."
     )
 
+    # 1. Query OpenAI for structured itinerary
     completion = client.beta.chat.completions.parse(
         model="gpt-4o-mini",
         messages=[
             {"role": "system", "content": system_prompt},
-            {"role": "user", "content": user_prompt},
+            {"role": "user", "content": f"Create a realistic Singapore itinerary for: '{user_prompt}'"},
         ],
-        response_format=ItineraryResponse,
+        response_format=ItineraryPlan,
     )
 
-    return completion.choices[0].message.parsed
+    parsed_plan = completion.choices[0].message.parsed
+
+    # 2. Start clock at 09:00 AM today
+    current_time = datetime.now().replace(hour=9, minute=0, second=0, microsecond=0)
+
+    formatted_stops = []
+    num_stops = len(parsed_plan.stops)
+    last_end_coords = None  # Prevents UnboundLocalError
+
+    for i, stop in enumerate(parsed_plan.stops):
+        arrival_str = current_time.strftime("%I:%M %p")
+        departure_time = current_time + timedelta(minutes=stop.stay_duration_mins)
+        departure_str = departure_time.strftime("%I:%M %p")
+
+        stop_dict = {
+            "stop_number": i + 1,
+            "venue_name": stop.venue_name,
+            "start_time": arrival_str,
+            "end_time": departure_str,
+            "duration_mins": stop.stay_duration_mins,
+            "why_go": stop.why_go,
+            "lat": None,
+            "lng": None,
+            "transit_to_next": None,
+        }
+
+        # Safe coordinate assignment
+        if i < num_stops - 1:
+            next_venue = parsed_plan.stops[i + 1].venue_name
+            transit_info = get_transit_route_by_name(
+                start_venue=stop.venue_name,
+                end_venue=next_venue,
+                departure_datetime=departure_time,
+            )
+
+            # Safely extract start coordinates for current stop
+            start_coords = transit_info.get("start_coords") if isinstance(transit_info, dict) else None
+            if isinstance(start_coords, dict):
+                stop_dict["lat"] = start_coords.get("lat")
+                stop_dict["lng"] = start_coords.get("lng")
+
+            # Store end coordinates to use for the final stop
+            end_coords = transit_info.get("end_coords") if isinstance(transit_info, dict) else None
+            if isinstance(end_coords, dict):
+                last_end_coords = end_coords
+
+            commute_mins = transit_info.get("real_commute_mins", 0) if isinstance(transit_info, dict) else 0
+            step_text = transit_info.get("step_by_step", "Direct route") if isinstance(transit_info,
+                                                                                       dict) else "Direct route"
+
+            stop_dict["transit_to_next"] = {
+                "commute_mins": commute_mins,
+                "step_by_step": step_text,
+            }
+            current_time = departure_time + timedelta(minutes=commute_mins)
+        else:
+            # Final stop gets coordinates from previous transit end location
+            if isinstance(last_end_coords, dict):
+                stop_dict["lat"] = last_end_coords.get("lat")
+                stop_dict["lng"] = last_end_coords.get("lng")
+            current_time = departure_time
+
+        formatted_stops.append(stop_dict)
+
+    # 4. Return final dictionary
+    return {
+        "title": parsed_plan.title,
+        "summary": parsed_plan.summary,
+        "stops": formatted_stops,
+    }
 
 
 # ==========================================
