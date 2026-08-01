@@ -1,162 +1,217 @@
 # 🇸🇬 DayOutPlanner — AI-Powered Singapore Travel Orchestrator
 
-> An intelligent itinerary planning engine that combines **OpenAI GPT-4o Structured Outputs** with the **Google Maps Directions API** to generate geographically realistic, chronologically accurate travel plans across Singapore.
+> An intelligent travel planning platform that combines **OpenAI GPT-4o Structured Outputs** with the **Google Maps Directions API** to generate geographically realistic, chronologically accurate itineraries across Singapore.
 
-![Python](https://img.shields.io/badge/Python-3.10%2B-blue)
-![OpenAI](https://img.shields.io/badge/OpenAI-GPT--4o--mini-green)
-![Google Maps](https://img.shields.io/badge/Google_Maps-Directions_API-orange)
-![Pydantic](https://img.shields.io/badge/Pydantic-v2-red)
-![License](https://img.shields.io/badge/License-MIT-brightgreen)
+DayOutPlanner uses Large Language Models to curate personalized travel experiences while grounding every route with real-world navigation data. The application automatically plans attractions, calculates public transit journeys, detects excessive walking, estimates Singapore taxi fares, and visualizes the itinerary on an interactive map.
 
 ---
 
-# 📖 Overview
+## ✨ Features
 
-Large Language Models are excellent at recommending places to visit but struggle with real-world travel logistics. They frequently underestimate travel times, recommend impractical walking routes, or generate itineraries that are not chronologically feasible.
+### 🤖 AI Itinerary Generation
 
-**DayOutPlanner** solves this problem by combining an LLM's planning capability with deterministic routing powered by the Google Maps Directions API.
+Generate complete Singapore day-trip itineraries from natural language prompts using OpenAI GPT-4o Structured Outputs.
 
-The planner generates a structured itinerary, calculates exact public transport routes between every destination, maintains an evolving schedule throughout the day, and automatically recommends Taxi/Grab alternatives whenever walking becomes unreasonable.
+- Structured itinerary generation
+- Time-aware activity planning
+- Singapore-focused recommendations
+- Reliable JSON responses using Pydantic
 
-The result is a travel plan that is both creative and practically executable.
+### 🚍 Real-Time Transit Routing
 
----
+Uses the Google Maps Directions API to calculate real public transport routes.
 
-# ✨ Features
+Supports:
 
-- 🤖 **AI Itinerary Generation**
-  - Uses OpenAI GPT-4o Structured Outputs to generate consistent travel plans.
+- MRT
+- Public buses
+- Ferries
+- Walking directions
 
-- 🗺️ **Google Maps Route Verification**
-  - Every destination is routed using the Google Maps Directions API instead of relying on LLM-estimated travel times.
-
-- 🚆 **Public Transport Planning**
-  - Supports MRT, buses, ferries and walking routes.
-
-- ⏰ **Chronological Schedule Engine**
-  - Maintains arrival and departure times across the entire itinerary.
-
-- 🚖 **Taxi / Grab Recommendation**
-  - Detects excessive walking (>800m) and estimates taxi fares and driving durations automatically.
-
-- 📍 **Singapore-Specific Prompt Engineering**
-  - Encourages realistic venue names, hawker centres, park entrances, and geographically clustered itineraries.
-
-- ✅ **Structured Outputs**
-  - Eliminates JSON parsing errors using OpenAI Structured Outputs with Pydantic.
+Instead of relying on LLM-estimated travel times, every journey is verified using Google Maps.
 
 ---
 
-# 🏗 System Architecture
+### 🚖 Smart Taxi / Grab Recommendation
+
+Long walking routes reduce usability.
+
+Whenever a walking segment exceeds **800 metres**, DayOutPlanner automatically:
+
+- Recommends taking Taxi / Grab
+- Calculates driving duration
+- Estimates Singapore taxi fare ranges (SGD)
+
+---
+
+### ⏰ Chronological Schedule Engine
+
+Maintains an evolving itinerary clock throughout the day.
+
+Every route is calculated using the user's planned departure time instead of the current system time, producing chronologically consistent itineraries.
+
+---
+
+### 🗺️ Interactive Google Maps
+
+Visualize the itinerary using numbered map markers.
+
+Features include:
+
+- Numbered attraction markers
+- Interactive InfoWindows
+- Automatic map centering
+- Live route visualization
+
+---
+
+### ⚡ Bi-Directional Timeline ↔ Map Synchronization
+
+Designed for an intuitive planning experience.
+
+Clicking a map marker:
+
+- Highlights the selected location
+- Opens its InfoWindow
+- Scrolls directly to the corresponding itinerary card
+
+Clicking a timeline card:
+
+- Highlights the map marker
+- Centers the map on the destination
+
+---
+
+### 🎨 Modern Responsive Interface
+
+Built using Next.js, TypeScript, and Tailwind CSS with a clean responsive design suitable for desktop and mobile devices.
+
+---
+
+# 🏗️ System Architecture
 
 ```mermaid
 flowchart TD
 
 A[User Prompt]
 
-A --> B[OpenAI GPT-4o-mini<br/>Structured Output]
+A --> B[OpenAI GPT-4o-mini<br/>Structured Outputs]
 
-B --> C[Chronological Schedule Engine]
+B --> C[Structured Itinerary<br/>Pydantic Validation]
 
-C --> D[Google Maps Directions API]
+C --> D[Chronological Schedule Engine]
 
-D --> E[Transit Verification]
+D --> E[Google Maps Directions API]
 
-E --> F[Taxi / Grab Fallback]
+E --> F[Transit Verification]
 
-F --> G[Final Timed Itinerary]
+F --> G{Walking > 800m?}
+
+G -->|Yes| H[Taxi / Grab Estimation]
+
+G -->|No| I[Public Transit Route]
+
+H --> J[Interactive Map & Timeline]
+
+I --> J
+
+J --> K[Final Travel Itinerary]
 ```
 
 ---
 
 # ⚙️ How It Works
 
-1. The user submits a natural-language travel request.
+1. The user enters a travel request in natural language.
 
-2. GPT-4o-mini generates a structured itinerary using Pydantic schemas.
+2. GPT-4o generates a structured itinerary using Pydantic schemas.
 
-3. Every destination is routed through the Google Maps Directions API.
+3. Every destination is passed to the Google Maps Directions API.
 
-4. The planner calculates:
+4. Google Maps calculates:
 
-   - Public transport routes
+   - Transit routes
    - Walking distances
+   - Driving routes
    - Travel durations
-   - Arrival times
-   - Departure times
 
-5. If a walking segment exceeds **800 metres**, the planner:
+5. The scheduling engine continuously updates departure and arrival times throughout the itinerary.
 
-   - Calculates driving duration
-   - Estimates Singapore taxi fares
-   - Recommends Taxi/Grab as an alternative
+6. When walking exceeds **800 metres**, the planner automatically recommends Taxi / Grab and estimates the fare.
 
-6. The final itinerary is returned as a chronologically consistent travel schedule.
+7. The completed itinerary is displayed on an interactive map alongside a synchronized timeline.
 
 ---
 
 # 🎯 Engineering Challenges
 
-Large Language Models excel at generating activity recommendations but are unreliable when reasoning about transportation logistics.
+Large Language Models excel at generating travel recommendations but are unreliable when reasoning about transportation logistics.
 
-Common problems include:
+Common issues include:
 
 - Hallucinated travel durations
 - Unrealistic walking distances
 - Ignoring departure times
-- Inefficient route ordering
-- Inconsistent schedule calculations
+- Inefficient attraction ordering
+- Invalid routing assumptions
 
 DayOutPlanner addresses these limitations by separating **creative planning** from **route verification**.
 
-The LLM is responsible for suggesting attractions and activities, while Google Maps provides deterministic routing information. A scheduling engine continuously updates the itinerary clock so every subsequent route is calculated using the correct planned departure time rather than the current system time.
+The LLM focuses solely on itinerary generation, while Google Maps provides deterministic routing information. A chronological scheduling engine ensures that every route is calculated using the itinerary's evolving departure time instead of the current system clock.
 
 ---
 
-# 📁 Repository Structure
+# 🛠️ Technology Stack
+
+## Frontend
+
+| Technology | Purpose |
+|------------|---------|
+| Next.js (App Router) | Frontend Framework |
+| TypeScript | Type Safety |
+| Tailwind CSS | Styling |
+| @vis.gl/react-google-maps | Interactive Maps |
+
+---
+
+## Backend
+
+| Technology | Purpose |
+|------------|---------|
+| FastAPI | REST API |
+| OpenAI GPT-4o | AI Itinerary Planning |
+| Pydantic | Structured Outputs |
+| Google Maps Directions API | Routing |
+| googlemaps SDK | Maps Integration |
+| python-dotenv | Environment Variables |
+| Uvicorn | ASGI Server |
+
+---
+
+# 📁 Project Structure
 
 ```text
 DayOutPlanner/
 │
-├── main.py
-│   Core execution pipeline
+├── frontend/
+│   ├── app/
+│   ├── components/
+│   ├── public/
+│   ├── package.json
+│   └── ...
 │
-├── gmaps_service.py
-│   Google Maps integration
-│   - Transit routing
-│   - Driving directions
-│   - Taxi fare estimation
+├── backend/
+│   ├── main.py
+│   ├── gmaps_service.py
+│   ├── helperFunction.py
+│   ├── models.py
+│   ├── tests/
+│   ├── .env.example
+│   └── requirements.txt
 │
-├── helperFunction.py
-│   Utility functions
-│   - Fare calculations
-│   - Time formatting
-│   - Output helpers
-│
-├── tests/
-│   └── test_helperFunction.py
-│
-├── .env.example
-│
-├── .gitignore
-│
-├── requirements.txt
-│
-└── README.md
+├── README.md
+└── LICENSE
 ```
-
----
-
-# 🛠 Technology Stack
-
-| Component | Technology |
-|-----------|------------|
-| Programming Language | Python 3.10+ |
-| AI Model | OpenAI GPT-4o-mini |
-| Structured Outputs | Pydantic v2 |
-| Mapping & Routing | Google Maps Directions API |
-| Environment Variables | python-dotenv |
-| Testing | unittest / pytest |
 
 ---
 
@@ -164,98 +219,170 @@ DayOutPlanner/
 
 ## Prerequisites
 
+- Node.js 18+
 - Python 3.10+
 - OpenAI API Key
-- Google Maps API Key with **Directions API** enabled
+- Google Maps API Key
+
+Enable the following Google services:
+
+- Maps JavaScript API
+- Directions API
 
 ---
 
-## 1. Clone the Repository
+# Backend Setup
+
+Navigate to the backend directory.
 
 ```bash
-git clone https://github.com/Sherlock-YH/DayOutPlanner.git
-
-cd DayOutPlanner
+cd backend
 ```
 
----
-
-## 2. Create a Virtual Environment
-
-### macOS / Linux
+Create a virtual environment.
 
 ```bash
-python3 -m venv .venv
-
-source .venv/bin/activate
+python -m venv venv
 ```
 
-### Windows
+Activate the environment.
+
+**macOS / Linux**
+
+```bash
+source venv/bin/activate
+```
+
+**Windows**
 
 ```powershell
-python -m venv .venv
-
-.venv\Scripts\activate
+venv\Scripts\activate
 ```
 
----
-
-## 3. Install Dependencies
+Install dependencies.
 
 ```bash
 pip install -r requirements.txt
 ```
 
----
-
-## 4. Configure Environment Variables
-
-Copy the example environment file.
-
-```bash
-cp .env.example .env
-```
-
-Edit `.env`:
+Create a `.env` file.
 
 ```env
-OPENAI_API_KEY=sk-proj-your-openai-api-key
-GOOGLE_MAPS_API_KEY=your-google-maps-api-key
+OPENAI_API_KEY=your_openai_api_key
+GOOGLE_MAPS_API_KEY=your_google_maps_api_key
 ```
 
----
-
-# ▶️ Running the Application
-
-Run the planner:
+Start the FastAPI server.
 
 ```bash
-python main.py
+uvicorn main:app --reload --port 8000
+```
+
+Backend:
+
+```
+http://localhost:8000
 ```
 
 ---
 
-# 🖥 Example Output
+# Frontend Setup
+
+Navigate to the frontend.
+
+```bash
+cd frontend
+```
+
+Install dependencies.
+
+```bash
+npm install
+```
+
+Create `.env.local`.
+
+```env
+NEXT_PUBLIC_GOOGLE_MAPS_API_KEY=your_google_maps_api_key
+```
+
+Start the development server.
+
+```bash
+npm run dev
+```
+
+Frontend:
+
+```
+http://localhost:3000
+```
+
+---
+
+# 📡 API
+
+## POST `/api/plan`
+
+Generates a complete travel itinerary.
+
+### Request
+
+```json
+{
+  "prompt": "A 1-day outdoor nature and local food tour in Singapore"
+}
+```
+
+---
+
+### Example Response
+
+```json
+{
+  "title": "Singapore Nature & Food Trail",
+  "summary": "Explore lush greenery followed by authentic local hawker delights.",
+  "stops": [
+    {
+      "stop_number": 1,
+      "venue_name": "Singapore Botanic Gardens",
+      "start_time": "08:30",
+      "end_time": "10:30",
+      "duration_mins": 120,
+      "why_go": "UNESCO World Heritage site with beautiful flora.",
+      "lat": 1.3138,
+      "lng": 103.8159,
+      "transit_to_next": {
+        "commute_mins": 20,
+        "step_by_step": "🚇 Take MRT Circle Line..."
+      }
+    }
+  ]
+}
+```
+
+---
+
+# 🖥️ Example Output
 
 ```text
-🤖 Generating itinerary...
+🤖 Generating AI itinerary...
 
 📍 Stop #1
 Singapore Botanic Gardens
 
-09:00 AM – 10:30 AM
+08:30 AM – 10:30 AM
 
 ↓
 
-🚍 Public Transit
-Walk 123 m
+🚍 MRT + Walking
 
 ↓
 
 📍 Stop #2
 The Halia
 
-10:32 AM – 11:32 AM
+10:35 AM – 11:35 AM
 
 ↓
 
@@ -269,13 +396,15 @@ $14–18 SGD
 
 📍 Stop #3
 MacRitchie Reservoir
+
+01:05 PM – 02:35 PM
 ```
 
 ---
 
 # 🧪 Running Tests
 
-Using Python's unittest:
+Using unittest:
 
 ```bash
 python -m unittest discover tests
@@ -289,28 +418,28 @@ pytest
 
 ---
 
-# 🔮 Future Improvements
+# 🚀 Future Enhancements
 
-- Interactive web interface
 - Multi-day itinerary generation
-- Budget-aware trip planning
 - Weather-aware scheduling
 - Attraction opening-hour validation
+- Budget-aware trip planning
 - Restaurant reservation integration
-- Hotel-aware route optimisation
-- User preference learning
-- Export itinerary to Google Calendar
+- Hotel-aware optimization
+- Google Calendar export
 - PDF itinerary generation
+- User preference learning
+- Route caching for faster responses
 
 ---
 
 # 📄 License
 
-This project is licensed under the MIT License.
+Distributed under the MIT License.
 
 ---
 
-# 👤 Author
+# 👨‍💻 Author
 
 **Sherlock Y**
 
@@ -319,4 +448,4 @@ This project is licensed under the MIT License.
 
 ---
 
-> Built to demonstrate practical applications of Large Language Models by combining AI planning with deterministic mapping and routing services for reliable real-world itinerary generation.
+> Built to demonstrate how Large Language Models can be combined with deterministic mapping and routing services to create practical, real-world travel planning applications.
