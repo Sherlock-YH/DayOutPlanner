@@ -7,6 +7,19 @@ from pydantic import BaseModel, Field
 
 # Import our new Google Maps transit service
 from gmaps_service import get_transit_route_by_name
+from fastapi import FastAPI
+from fastapi.middleware.cors import CORSMiddleware
+
+app = FastAPI(title="DayOutPlanner API")
+
+# Enable CORS for Next.js dev server
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["http://localhost:3000"],
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
 
 load_dotenv()
 client = OpenAI(api_key=os.getenv("OPENAI_API_KEY"))
