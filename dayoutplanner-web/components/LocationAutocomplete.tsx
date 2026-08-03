@@ -19,15 +19,15 @@ export default function LocationAutocomplete({
   const inputRef = useRef<HTMLInputElement | null>(null);
   const autocompleteRef = useRef<google.maps.places.Autocomplete | null>(null);
 
-  useEffect(() => {
-    const apiKey = process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY || "";
-    if (!apiKey) return;
+      useEffect(() => {
+      const apiKey = process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY || "";
+      if (!apiKey) return;
 
-    const loader = new Loader({
-      apiKey,
-      version: "weekly",
-      libraries: ["places"],
-    });
+      const loader = new Loader({
+        apiKey,
+        version: "weekly",
+        libraries: ["places", "marker"], // 👈 Updated to include both
+      });
 
     loader.load().then(async () => {
       if (!inputRef.current || autocompleteRef.current) return;

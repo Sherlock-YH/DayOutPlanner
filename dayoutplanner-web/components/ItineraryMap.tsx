@@ -40,7 +40,7 @@ export default function ItineraryMap({
     const loader = new Loader({
       apiKey,
       version: "weekly",
-      libraries: ["marker"],
+      libraries: ["places", "marker"],
     });
 
     loader.load().then(async () => {

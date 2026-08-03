@@ -4,11 +4,10 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="38107803-19b5-4aa9-91eb-727cdc0d235b" name="Changes" comment="add app.py to git">
-      <change afterPath="$PROJECT_DIR$/dayoutplanner-web/components/LocationAutocomplete.tsx" afterDir="false" />
+    <list default="true" id="38107803-19b5-4aa9-91eb-727cdc0d235b" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/dayoutplanner-web/app/globals.css" beforeDir="false" afterPath="$PROJECT_DIR$/dayoutplanner-web/app/globals.css" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/dayoutplanner-web/app/page.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/dayoutplanner-web/app/page.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/dayoutplanner-web/components/ItineraryMap.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/dayoutplanner-web/components/ItineraryMap.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/dayoutplanner-web/components/LocationAutocomplete.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/dayoutplanner-web/components/LocationAutocomplete.tsx" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -328,7 +327,15 @@
       <option name="project" value="LOCAL" />
       <updated>1785764813602</updated>
     </task>
-    <option name="localTasksCounter" value="20" />
+    <task id="LOCAL-00020" summary="Add autocomplete address for start location">
+      <option name="closed" value="true" />
+      <created>1785765854308</created>
+      <option name="number" value="00020" />
+      <option name="presentableId" value="LOCAL-00020" />
+      <option name="project" value="LOCAL" />
+      <updated>1785765854308</updated>
+    </task>
+    <option name="localTasksCounter" value="21" />
     <servers />
   </component>
   <component name="UnknownFeatures">
@@ -365,6 +372,7 @@
     <MESSAGE value="Change the calculated next timing referring to the recommended commute so the timing is more realistic" />
     <MESSAGE value="update Gmap marker" />
     <MESSAGE value="add app.py to git" />
-    <option name="LAST_COMMIT_MESSAGE" value="add app.py to git" />
+    <MESSAGE value="Add autocomplete address for start location" />
+    <option name="LAST_COMMIT_MESSAGE" value="Add autocomplete address for start location" />
   </component>
 </project>
