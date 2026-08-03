@@ -4,8 +4,11 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="38107803-19b5-4aa9-91eb-727cdc0d235b" name="Changes" comment="">
+    <list default="true" id="38107803-19b5-4aa9-91eb-727cdc0d235b" name="Changes" comment="add app.py to git">
+      <change afterPath="$PROJECT_DIR$/dayoutplanner-web/components/LocationAutocomplete.tsx" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/dayoutplanner-web/app/globals.css" beforeDir="false" afterPath="$PROJECT_DIR$/dayoutplanner-web/app/globals.css" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/dayoutplanner-web/app/page.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/dayoutplanner-web/app/page.tsx" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -317,7 +320,15 @@
       <option name="project" value="LOCAL" />
       <updated>1785764454501</updated>
     </task>
-    <option name="localTasksCounter" value="19" />
+    <task id="LOCAL-00019" summary="add app.py to git">
+      <option name="closed" value="true" />
+      <created>1785764813602</created>
+      <option name="number" value="00019" />
+      <option name="presentableId" value="LOCAL-00019" />
+      <option name="project" value="LOCAL" />
+      <updated>1785764813602</updated>
+    </task>
+    <option name="localTasksCounter" value="20" />
     <servers />
   </component>
   <component name="UnknownFeatures">
@@ -353,6 +364,7 @@
     <MESSAGE value="Improved UI that user can input their starting location and time" />
     <MESSAGE value="Change the calculated next timing referring to the recommended commute so the timing is more realistic" />
     <MESSAGE value="update Gmap marker" />
-    <option name="LAST_COMMIT_MESSAGE" value="update Gmap marker" />
+    <MESSAGE value="add app.py to git" />
+    <option name="LAST_COMMIT_MESSAGE" value="add app.py to git" />
   </component>
 </project>

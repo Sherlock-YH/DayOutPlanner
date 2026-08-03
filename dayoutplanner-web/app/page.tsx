@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import ItineraryMap from "@/components/ItineraryMap";
+import LocationAutocomplete from "@/components/LocationAutocomplete";
 
 // Generate 30-minute interval options
 const TIME_OPTIONS = (() => {
@@ -27,15 +28,15 @@ const TIME_OPTIONS = (() => {
 const QUICK_CHIP_GROUPS = [
   {
     category: "Pace",
-    chips: ["Relaxed (2-3 stops)", "Moderate(3-4 stops)", "Packed (5+ stops)"],
+    chips: ["Relaxed (3-4 stops)", "Moderate", "Packed (6+ stops)"],
   },
   {
     category: "Diet",
-    chips: ["Halal", "Vegetarian", "Hawker Only", "Meat Lover"],
+    chips: ["Halal", "Vegetarian", "Hawker Only"],
   },
   {
     category: "Style",
-    chips: ["Air-Conditioned / Indoor", "Outdoor & Nature", "Family Friendly", "Entertainment"],
+    chips: ["Air-Conditioned / Indoor", "Outdoor & Nature", "Family Friendly"],
   },
 ];
 
@@ -130,16 +131,15 @@ export default function Home() {
           className="bg-slate-800/80 border border-slate-700 rounded-2xl p-5 space-y-5 shadow-xl max-w-3xl mx-auto"
         >
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            {/* Start Location Input */}
+            {/* Start Location Input with Google Places Autocomplete */}
             <div className="space-y-1.5 text-left">
               <label className="text-xs font-semibold text-slate-400">
                 📍 Start Location
               </label>
-              <input
-                type="text"
+              <LocationAutocomplete
                 value={startLocation}
-                onChange={(e) => setStartLocation(e.target.value)}
-                placeholder="e.g. Changi Airport or Hotel Name"
+                onChange={setStartLocation}
+                placeholder="e.g. Marina Bay Sands, Changi Airport..."
                 className="w-full bg-slate-900 border border-slate-700 rounded-xl px-3.5 py-2.5 text-sm text-white focus:ring-2 focus:ring-emerald-500 outline-none"
               />
             </div>
@@ -283,7 +283,7 @@ export default function Home() {
                   {itinerary.initial_transit && (
                     <div className="bg-slate-800/40 border border-slate-700/60 rounded-lg p-4 ml-2 text-xs space-y-2 text-slate-300">
                       <div className="flex items-center gap-2 text-emerald-400 font-semibold">
-                        <span>`🚍` COMMUTE TO STOP #1</span>
+                        <span>🚍 COMMUTE TO STOP #1</span>
                         <span>
                           ({itinerary.initial_transit.commute_mins} mins)
                         </span>
@@ -353,7 +353,7 @@ export default function Home() {
                       {stop.transit_to_next && (
                         <div className="bg-slate-800/40 border border-slate-700/60 rounded-lg p-4 ml-2 text-xs space-y-2 text-slate-300">
                           <div className="flex items-center gap-2 text-emerald-400 font-semibold">
-                            <span>`🚍` COMMUTE</span>
+                            <span>🚍 COMMUTE</span>
                             <span>
                               ({stop.transit_to_next.commute_mins} mins)
                             </span>
