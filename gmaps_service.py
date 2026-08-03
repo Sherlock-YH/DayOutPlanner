@@ -132,12 +132,14 @@ def get_transit_route_by_name(
             departure_time=departure_datetime,
         )
 
+        # --- CASE 1: No Transit Route Found (Try Driving Fallback) ---
         if not directions:
             start_lower = start_venue.lower()
             end_lower = end_venue.lower()
 
             if start_lower in end_lower or end_lower in start_lower or "inside" in end_lower:
                 return {
+                    "drive_mins": 0,
                     "real_commute_mins": 0,
                     "walk_distance_m": 0,
                     "step_by_step": "🚶 Located inside or adjacent to current venue (<1 min walk)",
@@ -145,17 +147,30 @@ def get_transit_route_by_name(
                     "end_coords": None,
                 }
 
+            # Try driving fallback if public transit isn't available
+            driving_info = get_driving_fallback(start_venue, end_venue, departure_datetime)
+            if driving_info:
+                return {
+                    "drive_mins": driving_info["drive_mins"],
+                    "real_commute_mins": driving_info["drive_mins"],
+                    "walk_distance_m": 0,
+                    "step_by_step": f"🚖 Recommended Option: Taxi/Grab {driving_info['formatted_estimate']}\n      ⚠️ No direct public transit route found.",
+                    "start_coords": None,
+                    "end_coords": None,
+                }
+
             return {
+                "drive_mins": None,
                 "real_commute_mins": 0,
                 "walk_distance_m": 0,
-                "step_by_step": f"No transit route found between {start_venue} and {end_venue}.",
+                "step_by_step": f"No route found between {start_venue} and {end_venue}.",
                 "start_coords": None,
                 "end_coords": None,
             }
 
+        # --- CASE 2: Transit Route Found ---
         leg = directions[0]["legs"][0]
 
-        # 🔑 FIX: Return dicts instead of tuples so main.py can access .get('lat') / .get('lng')
         start_coords = {
             "lat": leg["start_location"]["lat"],
             "lng": leg["start_location"]["lng"],
@@ -211,6 +226,8 @@ def get_transit_route_by_name(
 
         transit_summary_str = " ➔ ".join(legs_summary)
 
+        # Check for driving fallback if walking distance is excessive (>800m)
+        driving_info = None
         if has_excessive_walk or (is_pure_walk and total_distance_m > 800):
             driving_info = get_driving_fallback(start_venue, end_venue, departure_datetime)
 
@@ -222,7 +239,9 @@ def get_transit_route_by_name(
         else:
             step_by_step_output = transit_summary_str
 
+        # ✅ FIXED RETURN DICT: Pass drive_mins directly to top level!
         return {
+            "drive_mins": driving_info["drive_mins"] if driving_info else None, # 👈 ADDED HERE
             "real_commute_mins": total_duration_mins,
             "walk_distance_m": total_distance_m,
             "step_by_step": step_by_step_output,
@@ -232,6 +251,7 @@ def get_transit_route_by_name(
 
     except Exception as e:
         return {
+            "drive_mins": None,
             "real_commute_mins": 0,
             "walk_distance_m": 0,
             "step_by_step": f"Routing error: {e}",

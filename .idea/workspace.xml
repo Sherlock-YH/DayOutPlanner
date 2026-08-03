@@ -6,7 +6,7 @@
   <component name="ChangeListManager">
     <list default="true" id="38107803-19b5-4aa9-91eb-727cdc0d235b" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/dayoutplanner-web/components/ItineraryMap.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/dayoutplanner-web/components/ItineraryMap.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/gmaps_service.py" beforeDir="false" afterPath="$PROJECT_DIR$/gmaps_service.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/main.py" beforeDir="false" afterPath="$PROJECT_DIR$/main.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -295,7 +295,15 @@
       <option name="project" value="LOCAL" />
       <updated>1785604146644</updated>
     </task>
-    <option name="localTasksCounter" value="16" />
+    <task id="LOCAL-00016" summary="Improved UI that user can input their starting location and time">
+      <option name="closed" value="true" />
+      <created>1785680633409</created>
+      <option name="number" value="00016" />
+      <option name="presentableId" value="LOCAL-00016" />
+      <option name="project" value="LOCAL" />
+      <updated>1785680633409</updated>
+    </task>
+    <option name="localTasksCounter" value="17" />
     <servers />
   </component>
   <component name="UnknownFeatures">
@@ -328,6 +336,7 @@
     <MESSAGE value="Zero API Cost: @patch(&quot;gmaps_service.gmaps&quot;) prevents calls to the live Google Maps API during tests.&#10;&#10;Deterministic Edge Case Testing: Google Maps ZERO_RESULTS API payloads can be hard to reproduce on demand with live queries. Mocking lets you force that exact edge case instantly in 0.002s." />
     <MESSAGE value="feat(ui): add interactive Google Map and bi-directional marker sync&#10;&#10;- Integrate `@vis.gl/react-google-maps` into frontend&#10;- Create `ItineraryMap` component with `AdvancedMarker` and `InfoWindow` support&#10;- Implement bi-directional click synchronization between map markers and timeline cards&#10;- Add smooth auto-scrolling (`scrollIntoView`) to focus stop cards when clicking pins&#10;- Refactor `app/page.tsx` into a split-screen layout with a sticky map pane&#10;- Update `README.md` with full setup guide, tech stack, and API schema documentation" />
     <MESSAGE value="add fixture test for routing" />
-    <option name="LAST_COMMIT_MESSAGE" value="add fixture test for routing" />
+    <MESSAGE value="Improved UI that user can input their starting location and time" />
+    <option name="LAST_COMMIT_MESSAGE" value="Improved UI that user can input their starting location and time" />
   </component>
 </project>

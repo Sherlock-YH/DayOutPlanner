@@ -75,7 +75,8 @@ def generate_itinerary_plan(
         "4. NO GEOGRAPHIC BACKTRACKING: Fully explore a single neighborhood/district before moving to the next. NEVER route the user back to a previously visited neighborhood later in the day.\n"
         "5. SAME-BUILDING PAIRING: When pairing an attraction with dining in the same building, explicitly state the building in both stop names so the routing engine recognizes proximity.\n"
         "6. SPECIFIC PARK ENTRANCES: Specify known entrances (e.g., 'MacRitchie Reservoir Mushroom Cafe Entrance').\n"
-        "7. NO DISTANCE CLAIMS IN RATIONALE: Leave all transit calculations entirely to the routing engine."
+        "7. NO DISTANCE CLAIMS IN RATIONALE: Leave all transit calculations entirely to the routing engine.\n"
+        "8. DISTANCE BETWEEN EACH STOP NEEDS TO BE REASONABLE: To mitigate the travelling time for users."
     )
 
     # 3. Query OpenAI for structured itinerary
@@ -101,11 +102,16 @@ def generate_itinerary_plan(
             departure_datetime=current_time,
         )
 
-        initial_commute_mins = (
-            initial_transit.get("real_commute_mins", 0)
-            if isinstance(initial_transit, dict)
-            else 0
-        )
+        # Prioritize drive_mins over real_commute_mins
+        if isinstance(initial_transit, dict):
+            initial_commute_mins = (
+                initial_transit.get("drive_mins")
+                or initial_transit.get("real_commute_mins")
+                or 0
+            )
+        else:
+            initial_commute_mins = 0
+
         step_text = (
             initial_transit.get("step_by_step", "Direct route")
             if isinstance(initial_transit, dict)
@@ -168,11 +174,16 @@ def generate_itinerary_plan(
             if isinstance(end_coords, dict):
                 last_end_coords = end_coords
 
-            commute_mins = (
-                transit_info.get("real_commute_mins", 0)
-                if isinstance(transit_info, dict)
-                else 0
-            )
+            # Correct key fallback matching gmaps_service.py
+            if isinstance(transit_info, dict):
+                commute_mins = (
+                    transit_info.get("drive_mins")
+                    or transit_info.get("real_commute_mins")
+                    or 0
+                )
+            else:
+                commute_mins = 0
+
             step_text = (
                 transit_info.get("step_by_step", "Direct route")
                 if isinstance(transit_info, dict)
