@@ -1,4 +1,5 @@
 import os
+import sys
 import traceback
 from datetime import datetime, timedelta
 from dotenv import load_dotenv
@@ -9,6 +10,12 @@ from pydantic import BaseModel
 
 # Import Google Maps transit service
 from gmaps_service import get_transit_route_by_name
+
+# Ensure Python defaults standard I/O to UTF-8
+if hasattr(sys.stdout, 'reconfigure'):
+    sys.stdout.reconfigure(encoding='utf-8')
+if hasattr(sys.stderr, 'reconfigure'):
+    sys.stderr.reconfigure(encoding='utf-8')
 
 load_dotenv()
 client = OpenAI()
@@ -73,13 +80,15 @@ def create_itinerary(req: PlanRequest):
 
     try:
         return generate_itinerary_plan(
-            prompt=req.prompt,
-            start_location=req.start_location,
-            start_time_str=req.start_time,
+            prompt=req.prompt.replace("\u2028", " "),
+            start_location=req.start_location.replace("\u2028", " "),
+            start_time_str=req.start_time.replace("\u2028", " ")
         )
     except Exception as e:
         traceback.print_exc()
-        raise HTTPException(status_code=500, detail=str(e))
+        # Clean exception message to prevent ASCII encoding crashes
+        error_msg = str(e).encode("utf-8", "ignore").decode("utf-8").replace("\u2028", " ")
+        raise HTTPException(status_code=500, detail=error_msg)
 
 
 # ==========================================
@@ -90,6 +99,11 @@ def generate_itinerary_plan(
     start_location: str = "Marina Bay Sands, Singapore",
     start_time_str: str = "09:00 AM",
 ):
+    # Sanitize inputs to strip invisible Unicode line separators
+    prompt = prompt.replace("\u2028", "\n").replace("\u2029", "\n").strip()
+    start_location = start_location.replace("\u2028", " ").replace("\u2029", " ").strip()
+    start_time_str = start_time_str.replace("\u2028", " ").replace("\u2029", " ").strip()
+
     now = datetime.now()
     try:
         clean_time_str = start_time_str.strip()
@@ -107,6 +121,7 @@ def generate_itinerary_plan(
     if current_time < now:
         current_time += timedelta(days=1)
 
+    # Clean multi-line system prompt without hidden unicode characters
     system_prompt = (
         "You are an expert Singapore travel planner and spatial logistics coordinator.\n\n"
         f"USER STARTING POINT: '{start_location}' at {start_time_str}.\n"
@@ -120,7 +135,7 @@ def generate_itinerary_plan(
         "6. SPECIFIC PARK ENTRANCES: Specify known entrances (e.g., 'MacRitchie Reservoir Mushroom Cafe Entrance').\n"
         "7. NO DISTANCE CLAIMS IN RATIONALE: Leave all transit calculations entirely to the routing engine.\n"
         "8. DISTANCE BETWEEN EACH STOP NEEDS TO BE REASONABLE: To mitigate the travelling time for users."
-    )
+    ).replace("\u2028", "\n")
 
     completion = client.beta.chat.completions.parse(
         model="gpt-4o-mini",
