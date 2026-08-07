@@ -20,7 +20,9 @@ if hasattr(sys.stderr, 'reconfigure'):
     sys.stderr.reconfigure(encoding='utf-8')
 
 load_dotenv()
-client = OpenAI()
+# Initialize OpenAI explicitly using the sanitized environment variable
+openai_api_key = os.getenv("OPENAI_API_KEY", "").replace("\u2028", "").strip()
+client = OpenAI(api_key=openai_api_key) if openai_api_key else OpenAI()
 
 
 # ==========================================
