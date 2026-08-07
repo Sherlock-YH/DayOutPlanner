@@ -4,11 +4,7 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="38107803-19b5-4aa9-91eb-727cdc0d235b" name="Changes" comment="Rearranging files prepared for deployment">
-      <change afterPath="$PROJECT_DIR$/frontend/types/itinerary.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/tsconfig.json" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/tsconfig.json" afterDir="false" />
-    </list>
+    <list default="true" id="38107803-19b5-4aa9-91eb-727cdc0d235b" name="Changes" comment="" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -356,7 +352,23 @@
       <option name="project" value="LOCAL" />
       <updated>1786086380667</updated>
     </task>
-    <option name="localTasksCounter" value="23" />
+    <task id="LOCAL-00023" summary="add itinerary.ts">
+      <option name="closed" value="true" />
+      <created>1786088003343</created>
+      <option name="number" value="00023" />
+      <option name="presentableId" value="LOCAL-00023" />
+      <option name="project" value="LOCAL" />
+      <updated>1786088003343</updated>
+    </task>
+    <task id="LOCAL-00024" summary="add gitignore">
+      <option name="closed" value="true" />
+      <created>1786088843069</created>
+      <option name="number" value="00024" />
+      <option name="presentableId" value="LOCAL-00024" />
+      <option name="project" value="LOCAL" />
+      <updated>1786088843069</updated>
+    </task>
+    <option name="localTasksCounter" value="25" />
     <servers />
   </component>
   <component name="UnknownFeatures">
@@ -396,6 +408,8 @@
     <MESSAGE value="Add autocomplete address for start location" />
     <MESSAGE value="bug fixing" />
     <MESSAGE value="Rearranging files prepared for deployment" />
-    <option name="LAST_COMMIT_MESSAGE" value="Rearranging files prepared for deployment" />
+    <MESSAGE value="add itinerary.ts" />
+    <MESSAGE value="add gitignore" />
+    <option name="LAST_COMMIT_MESSAGE" value="add gitignore" />
   </component>
 </project>

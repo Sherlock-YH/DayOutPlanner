@@ -1,0 +1,19 @@
+# created by virtualenv automatically
+# Environment variables and secrets
+# Frontend (Next.js)
+frontend/node_modules/
+frontend/.next/
+frontend/out/
+frontend/.env.local
+frontend/.env*.local
+
+# Backend (Python / FastAPI)
+backend/__pycache__/
+backend/*.pyc
+backend/venv/
+backend/.env
+
+# OS / Editor
+.DS_Store
+.vscode/
+.idea/
