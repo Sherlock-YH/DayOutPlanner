@@ -4,41 +4,10 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="38107803-19b5-4aa9-91eb-727cdc0d235b" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/backend/Procfile" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/backend/requirements.txt" afterDir="false" />
+    <list default="true" id="38107803-19b5-4aa9-91eb-727cdc0d235b" name="Changes" comment="Rearranging files prepared for deployment">
+      <change afterPath="$PROJECT_DIR$/frontend/types/itinerary.ts" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app.py" beforeDir="false" afterPath="$PROJECT_DIR$/backend/app.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/dayoutplanner-web/.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/.gitignore" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/dayoutplanner-web/AGENTS.md" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/AGENTS.md" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/dayoutplanner-web/CLAUDE.md" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/CLAUDE.md" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/dayoutplanner-web/README.md" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/README.md" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/dayoutplanner-web/app/favicon.ico" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/app/favicon.ico" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/dayoutplanner-web/app/globals.css" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/app/globals.css" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/dayoutplanner-web/app/layout.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/app/layout.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/dayoutplanner-web/app/page.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/app/page.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/dayoutplanner-web/components/ItineraryMap.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/components/ItineraryMap.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/dayoutplanner-web/components/LocationAutocomplete.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/components/LocationAutocomplete.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/dayoutplanner-web/components/Map.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/components/Map.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/dayoutplanner-web/eslint.config.mjs" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/eslint.config.mjs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/dayoutplanner-web/next.config.ts" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/next.config.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/dayoutplanner-web/package-lock.json" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/package-lock.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/dayoutplanner-web/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/package.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/dayoutplanner-web/postcss.config.mjs" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/postcss.config.mjs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/dayoutplanner-web/public/file.svg" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/public/file.svg" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/dayoutplanner-web/public/globe.svg" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/public/globe.svg" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/dayoutplanner-web/public/next.svg" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/public/next.svg" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/dayoutplanner-web/public/vercel.svg" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/public/vercel.svg" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/dayoutplanner-web/public/window.svg" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/public/window.svg" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/dayoutplanner-web/tsconfig.json" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/tsconfig.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/gmaps_service.py" beforeDir="false" afterPath="$PROJECT_DIR$/backend/gmaps_service.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/helperFunction.py" beforeDir="false" afterPath="$PROJECT_DIR$/backend/helperFunction.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/main.py" beforeDir="false" afterPath="$PROJECT_DIR$/backend/main.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/onemap_route.py" beforeDir="false" afterPath="$PROJECT_DIR$/backend/onemap_route.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/poc.py" beforeDir="false" afterPath="$PROJECT_DIR$/backend/poc.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/tests/test_helperFunction.py" beforeDir="false" afterPath="$PROJECT_DIR$/tests/test_helperFunction.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/tests/test_routing.py" beforeDir="false" afterPath="$PROJECT_DIR$/tests/test_routing.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/tests/test_same_building_routing.py" beforeDir="false" afterPath="$PROJECT_DIR$/tests/test_same_building_routing.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/tsconfig.json" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/tsconfig.json" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -379,7 +348,15 @@
       <option name="project" value="LOCAL" />
       <updated>1785766577377</updated>
     </task>
-    <option name="localTasksCounter" value="22" />
+    <task id="LOCAL-00022" summary="Rearranging files prepared for deployment">
+      <option name="closed" value="true" />
+      <created>1786086380667</created>
+      <option name="number" value="00022" />
+      <option name="presentableId" value="LOCAL-00022" />
+      <option name="project" value="LOCAL" />
+      <updated>1786086380667</updated>
+    </task>
+    <option name="localTasksCounter" value="23" />
     <servers />
   </component>
   <component name="UnknownFeatures">
@@ -418,6 +395,7 @@
     <MESSAGE value="add app.py to git" />
     <MESSAGE value="Add autocomplete address for start location" />
     <MESSAGE value="bug fixing" />
-    <option name="LAST_COMMIT_MESSAGE" value="bug fixing" />
+    <MESSAGE value="Rearranging files prepared for deployment" />
+    <option name="LAST_COMMIT_MESSAGE" value="Rearranging files prepared for deployment" />
   </component>
 </project>
