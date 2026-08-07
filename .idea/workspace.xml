@@ -5,8 +5,9 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="38107803-19b5-4aa9-91eb-727cdc0d235b" name="Changes" comment="">
+      <change beforePath="$PROJECT_DIR$/.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/.gitignore" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/components/Map.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/components/Map.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/app.py" beforeDir="false" afterPath="$PROJECT_DIR$/backend/app.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -379,7 +380,15 @@
       <option name="project" value="LOCAL" />
       <updated>1786089547726</updated>
     </task>
-    <option name="localTasksCounter" value="26" />
+    <task id="LOCAL-00026" summary="update map.tsx referrence">
+      <option name="closed" value="true" />
+      <created>1786089721172</created>
+      <option name="number" value="00026" />
+      <option name="presentableId" value="LOCAL-00026" />
+      <option name="project" value="LOCAL" />
+      <updated>1786089721172</updated>
+    </task>
+    <option name="localTasksCounter" value="27" />
     <servers />
   </component>
   <component name="UnknownFeatures">
@@ -397,7 +406,6 @@
     </option>
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="start of the project" />
     <MESSAGE value="created poc.py" />
     <MESSAGE value="test .env" />
     <MESSAGE value="working poc.py with .env" />
@@ -422,6 +430,7 @@
     <MESSAGE value="add itinerary.ts" />
     <MESSAGE value="add gitignore" />
     <MESSAGE value="change config for development" />
-    <option name="LAST_COMMIT_MESSAGE" value="change config for development" />
+    <MESSAGE value="update map.tsx referrence" />
+    <option name="LAST_COMMIT_MESSAGE" value="update map.tsx referrence" />
   </component>
 </project>

@@ -1,4 +1,5 @@
 # app.py
+import os
 import traceback
 from fastapi import FastAPI, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
@@ -8,9 +9,22 @@ from main import generate_itinerary_plan
 
 app = FastAPI(title="DayOutPlanner API")
 
+# Define origins allowed to communicate with this backend
+allowed_origins = [
+    "http://localhost:3000",
+    "http://127.0.0.1:3000",
+    "https://dayout-planner.vercel.app",  # Production Vercel domain
+    "https://dayout.sherlock-yh.top/",  # Production Vercel domain
+]
+
+# Allow overriding or extending the allowed frontend URL via environment variables
+frontend_url = os.getenv("FRONTEND_URL")
+if frontend_url and frontend_url not in allowed_origins:
+    allowed_origins.append(frontend_url)
+
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["http://localhost:3000", "http://127.0.0.1:3000"],
+    allow_origins=allowed_origins,
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
