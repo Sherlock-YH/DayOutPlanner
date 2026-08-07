@@ -28,15 +28,15 @@ const TIME_OPTIONS = (() => {
 const QUICK_CHIP_GROUPS = [
   {
     category: "Pace",
-    chips: ["Relaxed (3-4 stops)", "Moderate", "Packed (6+ stops)"],
+    chips: ["Relaxed (1-2 stops)", "Moderate(3-4)", "Packed (5+ stops)"],
   },
   {
     category: "Diet",
-    chips: ["Halal", "Vegetarian", "Hawker Only"],
+    chips: ["Halal", "Vegetarian", "Hawker Only", "Meat Lover", "No Food"],
   },
   {
     category: "Style",
-    chips: ["Air-Conditioned / Indoor", "Outdoor & Nature", "Family Friendly"],
+    chips: ["Air-Conditioned / Indoor", "Outdoor & Nature", "Family Friendly", "Pet Friendly"],
   },
 ];
 
@@ -88,7 +88,7 @@ export default function Home() {
     setActiveStopNumber(null);
 
     try {
-      const response = await fetch("https://dayoutplanner.up.railway.app/api/plan", {
+      const response = await fetch("https://dayoutplanner-production.up.railway.app", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({

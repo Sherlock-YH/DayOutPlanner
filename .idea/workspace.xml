@@ -4,10 +4,12 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="38107803-19b5-4aa9-91eb-727cdc0d235b" name="Changes" comment="">
+    <list default="true" id="38107803-19b5-4aa9-91eb-727cdc0d235b" name="Changes" comment="update the encoding">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/gmaps_service.py" beforeDir="false" afterPath="$PROJECT_DIR$/backend/gmaps_service.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/app/favicon.ico" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/app/favicon.ico" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/app/layout.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/app/layout.tsx" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/frontend/app/page.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/app/page.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/tsconfig.json" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/tsconfig.json" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -53,6 +55,7 @@
 }</component>
   <component name="RecentsManager">
     <key name="MoveFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$/frontend/app" />
       <recent name="$PROJECT_DIR$/backend" />
     </key>
   </component>
@@ -444,7 +447,15 @@
       <option name="project" value="LOCAL" />
       <updated>1786094049371</updated>
     </task>
-    <option name="localTasksCounter" value="34" />
+    <task id="LOCAL-00034" summary="update the encoding">
+      <option name="closed" value="true" />
+      <created>1786095995531</created>
+      <option name="number" value="00034" />
+      <option name="presentableId" value="LOCAL-00034" />
+      <option name="project" value="LOCAL" />
+      <updated>1786095995531</updated>
+    </task>
+    <option name="localTasksCounter" value="35" />
     <servers />
   </component>
   <component name="UnknownFeatures">
@@ -462,7 +473,6 @@
     </option>
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="Add gmap API to replace oneMap for better accuracy" />
     <MESSAGE value="Add helper function and test for it" />
     <MESSAGE value="Refine the main.py to work with gmap API&#10;Add excess walk checker in gmaps_service.py&#10;Add functions to suggest ride hailing for long walking distance" />
     <MESSAGE value="add CORSMiddleware to backend entrypoint" />
@@ -487,6 +497,7 @@
     <MESSAGE value="update main.py for railway" />
     <MESSAGE value="update frontend point to railway" />
     <MESSAGE value="update backend for frontend and backend connectivity" />
-    <option name="LAST_COMMIT_MESSAGE" value="update backend for frontend and backend connectivity" />
+    <MESSAGE value="update the encoding" />
+    <option name="LAST_COMMIT_MESSAGE" value="update the encoding" />
   </component>
 </project>
