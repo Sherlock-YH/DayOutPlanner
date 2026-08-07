@@ -88,7 +88,7 @@ export default function Home() {
     setActiveStopNumber(null);
 
     try {
-      const response = await fetch("http://localhost:8000/api/plan", {
+      const response = await fetch("https://dayoutplanner.up.railway.app/api/plan", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({

@@ -6,7 +6,7 @@
   <component name="ChangeListManager">
     <list default="true" id="38107803-19b5-4aa9-91eb-727cdc0d235b" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/main.py" beforeDir="false" afterPath="$PROJECT_DIR$/backend/main.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/app/page.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/app/page.tsx" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -419,7 +419,15 @@
       <option name="project" value="LOCAL" />
       <updated>1786092281815</updated>
     </task>
-    <option name="localTasksCounter" value="31" />
+    <task id="LOCAL-00031" summary="update main.py for railway">
+      <option name="closed" value="true" />
+      <created>1786092672774</created>
+      <option name="number" value="00031" />
+      <option name="presentableId" value="LOCAL-00031" />
+      <option name="project" value="LOCAL" />
+      <updated>1786092672774</updated>
+    </task>
+    <option name="localTasksCounter" value="32" />
     <servers />
   </component>
   <component name="UnknownFeatures">
@@ -437,7 +445,6 @@
     </option>
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="working openai and onemap api with minor adjustments and Fact-Checking Pipeline backed by official onemap API" />
     <MESSAGE value="Update catch of offshore destinations&#10;Increased to allow bus access/egress walks minor adjustments and Fact-Checking Pipeline backed by official onemap API" />
     <MESSAGE value="update offshore error&#10;modify the prompt" />
     <MESSAGE value="Add gmap API to replace oneMap for better accuracy" />
@@ -462,6 +469,7 @@
     <MESSAGE value="Fix files for backend deployment" />
     <MESSAGE value="Add requirement" />
     <MESSAGE value="update for railway" />
-    <option name="LAST_COMMIT_MESSAGE" value="update for railway" />
+    <MESSAGE value="update main.py for railway" />
+    <option name="LAST_COMMIT_MESSAGE" value="update main.py for railway" />
   </component>
 </project>
