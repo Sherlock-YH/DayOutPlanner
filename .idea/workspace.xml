@@ -6,8 +6,8 @@
   <component name="ChangeListManager">
     <list default="true" id="38107803-19b5-4aa9-91eb-727cdc0d235b" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/app.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/main.py" beforeDir="false" afterPath="$PROJECT_DIR$/backend/main.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/gmaps_service.py" beforeDir="false" afterPath="$PROJECT_DIR$/backend/gmaps_service.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/app/page.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/app/page.tsx" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -436,7 +436,15 @@
       <option name="project" value="LOCAL" />
       <updated>1786093134127</updated>
     </task>
-    <option name="localTasksCounter" value="33" />
+    <task id="LOCAL-00033" summary="update backend for frontend and backend connectivity">
+      <option name="closed" value="true" />
+      <created>1786094049371</created>
+      <option name="number" value="00033" />
+      <option name="presentableId" value="LOCAL-00033" />
+      <option name="project" value="LOCAL" />
+      <updated>1786094049371</updated>
+    </task>
+    <option name="localTasksCounter" value="34" />
     <servers />
   </component>
   <component name="UnknownFeatures">
@@ -454,7 +462,6 @@
     </option>
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="update offshore error&#10;modify the prompt" />
     <MESSAGE value="Add gmap API to replace oneMap for better accuracy" />
     <MESSAGE value="Add helper function and test for it" />
     <MESSAGE value="Refine the main.py to work with gmap API&#10;Add excess walk checker in gmaps_service.py&#10;Add functions to suggest ride hailing for long walking distance" />
@@ -479,6 +486,7 @@
     <MESSAGE value="update for railway" />
     <MESSAGE value="update main.py for railway" />
     <MESSAGE value="update frontend point to railway" />
-    <option name="LAST_COMMIT_MESSAGE" value="update frontend point to railway" />
+    <MESSAGE value="update backend for frontend and backend connectivity" />
+    <option name="LAST_COMMIT_MESSAGE" value="update backend for frontend and backend connectivity" />
   </component>
 </project>
