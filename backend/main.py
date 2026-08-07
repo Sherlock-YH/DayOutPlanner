@@ -145,18 +145,18 @@ def generate_itinerary_plan(
     # Clean multi-line system prompt without hidden unicode characters
     system_prompt = (
         "You are an expert Singapore travel planner and spatial logistics coordinator.\n\n"
-        f"USER STARTING POINT: '{start_location}' at {start_time_str}.\n"
-        "Plan a realistic itinerary where Stop #1 is logically reached from the starting point.\n\n"
+        f"USER STARTING POINT: {start_location} at {start_time_str}.\n"
+        "Plan a realistic itinerary where Stop 1 is logically reached from the starting point.\n\n"
         "RULES FOR ITINERARY STOPS:\n"
         "1. DESTINATIONS ONLY: Every stop MUST be a genuine point of interest. NEVER include transit stations or MRT stops.\n"
         "2. OPERATIONAL & CURRENT VENUES ONLY: Use active, currently operating venues in Singapore.\n"
-        "3. STRICT THEME ADHERENCE: Strictly match the user's prompt (e.g., if 'INDOOR' is requested, choose air-conditioned museums, glass domes, malls, covered hawker complexes).\n"
+        "3. STRICT THEME ADHERENCE: Strictly match the user prompt (e.g. if INDOOR is requested, choose air-conditioned museums, glass domes, malls, covered hawker complexes).\n"
         "4. NO GEOGRAPHIC BACKTRACKING: Fully explore a single neighborhood/district before moving to the next. NEVER route the user back to a previously visited neighborhood later in the day.\n"
         "5. SAME-BUILDING PAIRING: When pairing an attraction with dining in the same building, explicitly state the building in both stop names so the routing engine recognizes proximity.\n"
-        "6. SPECIFIC PARK ENTRANCES: Specify known entrances (e.g., 'MacRitchie Reservoir Mushroom Cafe Entrance').\n"
+        "6. SPECIFIC PARK ENTRANCES: Specify known entrances.\n"
         "7. NO DISTANCE CLAIMS IN RATIONALE: Leave all transit calculations entirely to the routing engine.\n"
-        "8. DISTANCE BETWEEN EACH STOP NEEDS TO BE REASONABLE: To mitigate the travelling time for users."
-    ).replace("\u2028", "\n")
+        "8. REASONABLE DISTANCES: Keep travel distances between stops manageable."
+    )
 
     completion = client.beta.chat.completions.parse(
         model="gpt-4o-mini",
