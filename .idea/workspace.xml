@@ -4,12 +4,9 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="38107803-19b5-4aa9-91eb-727cdc0d235b" name="Changes" comment="update the encoding">
+    <list default="true" id="38107803-19b5-4aa9-91eb-727cdc0d235b" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/app/favicon.ico" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/app/favicon.ico" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/app/layout.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/app/layout.tsx" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/frontend/app/page.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/app/page.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/tsconfig.json" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/tsconfig.json" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -455,7 +452,15 @@
       <option name="project" value="LOCAL" />
       <updated>1786095995531</updated>
     </task>
-    <option name="localTasksCounter" value="35" />
+    <task id="LOCAL-00035" summary="update frontend icons and wordings">
+      <option name="closed" value="true" />
+      <created>1786101848375</created>
+      <option name="number" value="00035" />
+      <option name="presentableId" value="LOCAL-00035" />
+      <option name="project" value="LOCAL" />
+      <updated>1786101848375</updated>
+    </task>
+    <option name="localTasksCounter" value="36" />
     <servers />
   </component>
   <component name="UnknownFeatures">
@@ -473,7 +478,6 @@
     </option>
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="Add helper function and test for it" />
     <MESSAGE value="Refine the main.py to work with gmap API&#10;Add excess walk checker in gmaps_service.py&#10;Add functions to suggest ride hailing for long walking distance" />
     <MESSAGE value="add CORSMiddleware to backend entrypoint" />
     <MESSAGE value="Zero API Cost: @patch(&quot;gmaps_service.gmaps&quot;) prevents calls to the live Google Maps API during tests.&#10;&#10;Deterministic Edge Case Testing: Google Maps ZERO_RESULTS API payloads can be hard to reproduce on demand with live queries. Mocking lets you force that exact edge case instantly in 0.002s." />
@@ -498,6 +502,7 @@
     <MESSAGE value="update frontend point to railway" />
     <MESSAGE value="update backend for frontend and backend connectivity" />
     <MESSAGE value="update the encoding" />
-    <option name="LAST_COMMIT_MESSAGE" value="update the encoding" />
+    <MESSAGE value="update frontend icons and wordings" />
+    <option name="LAST_COMMIT_MESSAGE" value="update frontend icons and wordings" />
   </component>
 </project>

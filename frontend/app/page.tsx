@@ -88,7 +88,7 @@ export default function Home() {
     setActiveStopNumber(null);
 
     try {
-      const response = await fetch("https://dayoutplanner-production.up.railway.app", {
+        const response = await fetch("https://dayoutplanner.up.railway.app/api/plan", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
@@ -118,7 +118,7 @@ export default function Home() {
         {/* Header */}
         <header className="text-center space-y-2">
           <h1 className="text-4xl font-extrabold tracking-tight text-emerald-400">
-            🇸🇬 DayOutPlanner
+            🇸🇬 One Day Out Planner
           </h1>
           <p className="text-slate-400 text-sm">
             AI Travel Orchestrator powered by GPT-4o & Google Maps
