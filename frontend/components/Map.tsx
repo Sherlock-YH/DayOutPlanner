@@ -3,7 +3,7 @@
 
 import { useMemo, useCallback, useRef } from "react";
 import { GoogleMap, useJsApiLoader, MarkerF, PolylineF } from "@react-google-maps/api";
-import { ItineraryStop } from "@/types/itinerary";
+import { ItineraryStop } from "../types/itinerary";
 
 const containerStyle = {
   width: "100%",
