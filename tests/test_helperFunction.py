@@ -2,7 +2,7 @@ import unittest
 from datetime import datetime
 
 # Import the function you want to test from helperFunction.py
-from helperFunction import calculate_sg_taxi_fare
+from backend.helperFunction import calculate_sg_taxi_fare
 
 
 class TestTaxiFareCalculator(unittest.TestCase):

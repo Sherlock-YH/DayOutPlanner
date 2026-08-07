@@ -2,7 +2,7 @@ import os
 import sys
 import unittest
 from datetime import datetime
-from unittest.mock import patch, MagicMock
+from unittest.mock import patch
 
 # Dynamically add the project root directory to sys.path
 TESTS_DIR = os.path.dirname(os.path.abspath(__file__))
@@ -10,7 +10,7 @@ PROJECT_ROOT = os.path.abspath(os.path.join(TESTS_DIR, ".."))
 if PROJECT_ROOT not in sys.path:
     sys.path.insert(0, PROJECT_ROOT)
 
-from gmaps_service import get_transit_route_by_name
+from backend.gmaps_service import get_transit_route_by_name
 
 
 class TestSameBuildingRouting(unittest.TestCase):
