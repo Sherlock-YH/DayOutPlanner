@@ -4,13 +4,25 @@ from datetime import datetime, timedelta
 from dotenv import load_dotenv
 from openai import OpenAI
 from pydantic import BaseModel
+from fastapi import FastAPI
+from fastapi.middleware.cors import CORSMiddleware
 
 # Import Google Maps transit service
 from gmaps_service import get_transit_route_by_name
 
 load_dotenv()
-client = OpenAI(api_key=os.getenv("OPENAI_API_KEY"))
+client = OpenAI()
 
+app = FastAPI()
+
+# Allow requests from your local or deployed frontend
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],  # Allows all origins (or specify your frontend URL)
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
 
 # ==========================================
 # 1. Pydantic Schema
