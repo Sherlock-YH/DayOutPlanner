@@ -1,3 +1,4 @@
+import json
 import os
 import sys
 import traceback
@@ -5,6 +6,7 @@ from datetime import datetime, timedelta
 from dotenv import load_dotenv
 from fastapi import FastAPI, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
+from fastapi.responses import JSONResponse
 from openai import OpenAI
 from pydantic import BaseModel
 
@@ -20,7 +22,26 @@ if hasattr(sys.stderr, 'reconfigure'):
 load_dotenv()
 client = OpenAI()
 
-app = FastAPI(title="DayOutPlanner API")
+
+# ==========================================
+# 0. Unicode-safe JSON Response
+# ==========================================
+# FastAPI's default JSONResponse uses `ensure_ascii=True`, which raises a
+# UnicodeEncodeError when the payload contains non-ASCII characters (e.g.
+# the \u2028 line separator that OpenAI sometimes returns). Using
+# `ensure_ascii=False` lets the response body be encoded as UTF-8 instead.
+class UnicodeJSONResponse(JSONResponse):
+    def render(self, content) -> bytes:
+        return json.dumps(
+            content,
+            ensure_ascii=False,
+            allow_nan=False,
+            indent=None,
+            separators=(",", ":"),
+        ).encode("utf-8")
+
+
+app = FastAPI(title="DayOutPlanner API", default_response_class=UnicodeJSONResponse)
 
 # ==========================================
 # 1. CORS Configuration
