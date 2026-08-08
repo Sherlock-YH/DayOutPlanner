@@ -1,6 +1,5 @@
-# auth.py
 import os
-from datetime import datetime, timedelta
+from datetime import datetime, timedelta, timezone
 from fastapi import APIRouter, Depends, HTTPException, status
 from fastapi.security import OAuth2PasswordBearer, OAuth2PasswordRequestForm
 from jose import JWTError, jwt
@@ -9,19 +8,32 @@ from pydantic import BaseModel, EmailStr
 from sqlalchemy import Column, Integer, String, Boolean, create_engine
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import Session, sessionmaker
+from sqlalchemy.pool import NullPool
 
 SECRET_KEY = os.getenv("SECRET_KEY", "super-secret-fallback-key-change-in-railway")
 ALGORITHM = "HS256"
 ACCESS_TOKEN_EXPIRE_MINUTES = 1440  # 24 hours
 
-DATABASE_URL = os.getenv("DATABASE_URL", "sqlite:///./dayout.db")
+# Get DATABASE_URL from Railway environment variables
+DATABASE_URL = os.getenv("DATABASE_URL")
+
+# Fix legacy prefix if necessary
 if DATABASE_URL and DATABASE_URL.startswith("postgres://"):
     DATABASE_URL = DATABASE_URL.replace("postgres://", "postgresql://", 1)
 
-engine = create_engine(
-    DATABASE_URL,
-    connect_args={"check_same_thread": False} if "sqlite" in DATABASE_URL else {}
-)
+# Configure engine for Transaction Mode Pooler
+if DATABASE_URL and "6543" in DATABASE_URL:
+    engine = create_engine(
+        DATABASE_URL,
+        poolclass=NullPool,  # Let Supabase Pooler manage connections
+        pool_pre_ping=True
+    )
+else:
+    engine = create_engine(
+        DATABASE_URL,
+        connect_args={"check_same_thread": False} if "sqlite" in DATABASE_URL else {}
+    )
+
 SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
 Base = declarative_base()
 
@@ -37,7 +49,7 @@ class UserDB(Base):
     id = Column(Integer, primary_key=True, index=True)
     email = Column(String, unique=True, index=True, nullable=False)
     hashed_password = Column(String, nullable=False)
-    is_admin = Column(Boolean, default=False)  # <-- Required for admin checks
+    is_admin = Column(Boolean, default=False)
 
 
 def init_db():
@@ -74,7 +86,7 @@ def get_password_hash(password):
 
 def create_access_token(data: dict):
     to_encode = data.copy()
-    expire = datetime.utcnow() + timedelta(minutes=ACCESS_TOKEN_EXPIRE_MINUTES)
+    expire = datetime.now(timezone.utc) + timedelta(minutes=ACCESS_TOKEN_EXPIRE_MINUTES)
     to_encode.update({"exp": expire})
     return jwt.encode(to_encode, SECRET_KEY, algorithm=ALGORITHM)
 
