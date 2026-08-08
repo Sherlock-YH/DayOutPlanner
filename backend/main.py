@@ -10,8 +10,9 @@ from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import JSONResponse
 from openai import OpenAI
 from pydantic import BaseModel
+from sqlalchemy.orm import Session
 
-from auth import router as auth_router, init_db, get_current_user, UserDB
+from auth import router as auth_router, init_db, get_current_user, UserDB, get_current_admin_user, get_db
 from fastapi import Depends, FastAPI
 
 # Import Google Maps transit service
@@ -297,6 +298,12 @@ def generate_itinerary_plan(
 @app.get("/")
 def health_check():
     return {"status": "online", "message": "DayOutPlanner API is running!"}
+
+@app.get("/api/admin/users")
+def get_all_users(current_admin: UserDB = Depends(get_current_admin_user), db: Session = Depends(get_db)):
+    # Only users with is_admin = true can access this endpoint
+    users = db.query(UserDB).all()
+    return [{"id": u.id, "email": u.email, "is_admin": u.is_admin} for u in users]
 
 
 # ==========================================

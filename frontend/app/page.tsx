@@ -1,8 +1,10 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import ItineraryMap from "@/components/ItineraryMap";
 import LocationAutocomplete from "@/components/LocationAutocomplete";
+
+const API_BASE = "https://dayoutplanner.up.railway.app";
 
 // Generate 30-minute interval options
 const TIME_OPTIONS = (() => {
@@ -11,9 +13,8 @@ const TIME_OPTIONS = (() => {
     for (let min = 0; min < 60; min += 30) {
       const hStr = hour.toString().padStart(2, "0");
       const mStr = min.toString().padStart(2, "0");
-      const value = `${hStr}:${mStr}`; // e.g. "09:00" for backend
+      const value = `${hStr}:${mStr}`;
 
-      // Display formatting (e.g. "9:00 AM")
       const period = hour >= 12 ? "PM" : "AM";
       const displayHour = hour % 12 === 0 ? 12 : hour % 12;
       const label = `${displayHour}:${mStr} ${period}`;
@@ -24,7 +25,6 @@ const TIME_OPTIONS = (() => {
   return options;
 })();
 
-// Preset Quick-Chips
 const QUICK_CHIP_GROUPS = [
   {
     category: "Pace",
@@ -41,10 +41,17 @@ const QUICK_CHIP_GROUPS = [
 ];
 
 export default function Home() {
-  // Input States
+  // Auth States
+  const [token, setToken] = useState<string | null>(null);
+  const [isSignup, setIsSignup] = useState(false);
+  const [authEmail, setAuthEmail] = useState("");
+  const [authPassword, setAuthPassword] = useState("");
+  const [authError, setAuthError] = useState<string | null>(null);
+
+  // App Input States
   const [prompt, setPrompt] = useState("");
   const [startLocation, setStartLocation] = useState("");
-  const [startTime, setStartTime] = useState("10:00"); // 24-hour time picker format
+  const [startTime, setStartTime] = useState("10:00");
   const [selectedChips, setSelectedChips] = useState<string[]>([]);
 
   // UI & Data States
@@ -53,14 +60,66 @@ export default function Home() {
   const [error, setError] = useState<string | null>(null);
   const [activeStopNumber, setActiveStopNumber] = useState<number | null>(null);
 
-  // Toggle selection for quick-chips
+  // Load token on client mount
+  useEffect(() => {
+    const savedToken = localStorage.getItem("token");
+    if (savedToken) setToken(savedToken);
+  }, []);
+
+  // Handle Authentication (Login / Signup)
+  const handleAuthSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setAuthError(null);
+
+    const endpoint = isSignup ? "/api/auth/signup" : "/api/auth/login";
+    let headers: Record<string, string> = {};
+    let body: any;
+
+    if (isSignup) {
+      headers["Content-Type"] = "application/json";
+      body = JSON.stringify({ email: authEmail, password: authPassword });
+    } else {
+      headers["Content-Type"] = "application/x-www-form-urlencoded";
+      const formData = new URLSearchParams();
+      formData.append("username", authEmail);
+      formData.append("password", authPassword);
+      body = formData.toString();
+    }
+
+    try {
+      const res = await fetch(`${API_BASE}${endpoint}`, {
+        method: "POST",
+        headers,
+        body,
+      });
+
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.detail || "Authentication failed");
+
+      if (isSignup) {
+        alert("Account created successfully! Please log in.");
+        setIsSignup(false);
+      } else {
+        localStorage.setItem("token", data.access_token);
+        setToken(data.access_token);
+      }
+    } catch (err: any) {
+      setAuthError(err.message || "An error occurred during authentication.");
+    }
+  };
+
+  const handleLogout = () => {
+    localStorage.removeItem("token");
+    setToken(null);
+    setItinerary(null);
+  };
+
   const toggleChip = (chip: string) => {
     setSelectedChips((prev) =>
       prev.includes(chip) ? prev.filter((c) => c !== chip) : [...prev, chip]
     );
   };
 
-  // Scroll card into view on marker/card selection
   const handleSelectStop = (stopNumber: number) => {
     setActiveStopNumber(stopNumber);
     if (!stopNumber) return;
@@ -76,8 +135,6 @@ export default function Home() {
 
   const handleGenerate = async (e: React.FormEvent) => {
     e.preventDefault();
-
-    // Combine manual prompt text with selected chip tags
     const fullPromptParts = [prompt.trim(), ...selectedChips].filter(Boolean);
     const finalPrompt = fullPromptParts.join(", ");
 
@@ -88,15 +145,24 @@ export default function Home() {
     setActiveStopNumber(null);
 
     try {
-        const response = await fetch("https://dayoutplanner.up.railway.app/api/plan", {
+      const response = await fetch(`${API_BASE}/api/plan`, {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
+        headers: {
+          "Content-Type": "application/json",
+          "Authorization": `Bearer ${token}`, // Passes the user JWT token
+        },
         body: JSON.stringify({
           prompt: finalPrompt,
           start_location: startLocation.trim(),
           start_time: startTime,
         }),
       });
+
+      if (response.status === 401) {
+        // Token expired or invalid
+        handleLogout();
+        throw new Error("Session expired. Please log in again.");
+      }
 
       if (!response.ok) {
         const errorData = await response.json().catch(() => null);
@@ -112,17 +178,99 @@ export default function Home() {
     }
   };
 
+  // ==========================================
+  // VIEW 1: AUTHENTICATION SCREEN (If not logged in)
+  // ==========================================
+  if (!token) {
+    return (
+      <main className="min-h-screen bg-slate-900 text-slate-100 flex items-center justify-center p-4">
+        <div className="w-full max-w-md bg-slate-800/90 border border-slate-700 rounded-2xl p-8 space-y-6 shadow-2xl">
+          <div className="text-center space-y-2">
+            <h1 className="text-3xl font-extrabold tracking-tight text-emerald-400">
+              🇸🇬 One Day Out Planner
+            </h1>
+            <p className="text-slate-400 text-sm">
+              {isSignup ? "Create an account to start planning" : "Log in to access your itinerary engine"}
+            </p>
+          </div>
+
+          {authError && (
+            <div className="p-3 bg-red-900/40 border border-red-700 rounded-xl text-red-200 text-xs">
+              ⚠️ {authError}
+            </div>
+          )}
+
+          <form onSubmit={handleAuthSubmit} className="space-y-4">
+            <div className="space-y-1.5 text-left">
+              <label className="text-xs font-semibold text-slate-400">Email Address</label>
+              <input
+                type="email"
+                required
+                value={authEmail}
+                onChange={(e) => setAuthEmail(e.target.value)}
+                placeholder="you@example.com"
+                className="w-full bg-slate-900 border border-slate-700 rounded-xl px-3.5 py-2.5 text-sm text-white focus:ring-2 focus:ring-emerald-500 outline-none"
+              />
+            </div>
+
+            <div className="space-y-1.5 text-left">
+              <label className="text-xs font-semibold text-slate-400">Password</label>
+              <input
+                type="password"
+                required
+                value={authPassword}
+                onChange={(e) => setAuthPassword(e.target.value)}
+                placeholder="••••••••"
+                className="w-full bg-slate-900 border border-slate-700 rounded-xl px-3.5 py-2.5 text-sm text-white focus:ring-2 focus:ring-emerald-500 outline-none"
+              />
+            </div>
+
+            <button
+              type="submit"
+              className="w-full bg-emerald-500 hover:bg-emerald-600 font-bold text-slate-950 py-3 rounded-xl transition-all text-sm cursor-pointer shadow-lg shadow-emerald-500/10"
+            >
+              {isSignup ? "Sign Up" : "Log In"}
+            </button>
+          </form>
+
+          <div className="text-center pt-2">
+            <button
+              onClick={() => {
+                setIsSignup(!isSignup);
+                setAuthError(null);
+              }}
+              className="text-xs text-slate-400 hover:text-emerald-400 transition-colors cursor-pointer"
+            >
+              {isSignup ? "Already have an account? Log in" : "Need an account? Sign up"}
+            </button>
+          </div>
+        </div>
+      </main>
+    );
+  }
+
+  // ==========================================
+  // VIEW 2: MAIN PLANNER DASHBOARD (If logged in)
+  // ==========================================
   return (
     <main className="min-h-screen bg-slate-900 text-slate-100 p-4 md:p-8">
       <div className="max-w-7xl mx-auto space-y-6">
-        {/* Header */}
-        <header className="text-center space-y-2">
-          <h1 className="text-4xl font-extrabold tracking-tight text-emerald-400">
-            🇸🇬 One Day Out Planner
-          </h1>
-          <p className="text-slate-400 text-sm">
-            AI Travel Orchestrator powered by GPT-4o & Google Maps
-          </p>
+        {/* Header & Logout */}
+        <header className="flex flex-col sm:flex-row items-center justify-between border-b border-slate-800 pb-4 gap-4">
+          <div className="text-center sm:text-left space-y-1">
+            <h1 className="text-3xl font-extrabold tracking-tight text-emerald-400">
+              🇸🇬 One Day Out Planner
+            </h1>
+            <p className="text-slate-400 text-sm">
+              AI Travel Orchestrator powered by GPT-4o & Google Maps
+            </p>
+          </div>
+          <button
+            onClick={handleLogout}
+            className="text-xs px-4 py-2 border border-slate-700 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-300 transition cursor-pointer"
+          >
+            Log Out
+          </button>
         </header>
 
         {/* Input Form */}
@@ -131,7 +279,7 @@ export default function Home() {
           className="bg-slate-800/80 border border-slate-700 rounded-2xl p-5 space-y-5 shadow-xl max-w-3xl mx-auto"
         >
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            {/* Start Location Input with Google Places Autocomplete */}
+            {/* Start Location Input */}
             <div className="space-y-1.5 text-left">
               <label className="text-xs font-semibold text-slate-400">
                 📍 Start Location
@@ -161,7 +309,6 @@ export default function Home() {
                     </option>
                   ))}
                 </select>
-                {/* Custom Dropdown Arrow */}
                 <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center px-3 text-slate-400 text-xs">
                   ▼
                 </div>
@@ -169,7 +316,7 @@ export default function Home() {
             </div>
           </div>
 
-          {/* 🎛️ Pace & Filter Quick-Chips */}
+          {/* Quick-Chips */}
           <div className="space-y-3 pt-2 border-t border-slate-700/60 text-left">
             <div className="flex items-center justify-between">
               <span className="text-xs font-semibold text-slate-400">
@@ -250,9 +397,8 @@ export default function Home() {
         {/* Split-Screen View */}
         {itinerary && (
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start pt-4 text-left">
-            {/* Left Column: Timeline Cards (7 Cols) */}
+            {/* Left Column: Timeline Cards */}
             <div className="lg:col-span-7 space-y-6">
-              {/* Summary Box */}
               <div className="bg-slate-800/60 border border-slate-700 rounded-2xl p-6 space-y-2">
                 <h2 className="text-2xl font-bold text-white">
                   {itinerary.title || "Your Itinerary Plan"}
@@ -263,7 +409,7 @@ export default function Home() {
               </div>
 
               <div className="relative pl-6 border-l-2 border-emerald-500/30 space-y-8">
-                {/* 📍 START LOCATION CARD */}
+                {/* START LOCATION */}
                 <div className="relative space-y-4">
                   <div className="absolute -left-[31px] top-4 w-4 h-4 rounded-full bg-blue-500 ring-4 ring-slate-900" />
 
@@ -279,14 +425,11 @@ export default function Home() {
                     </h3>
                   </div>
 
-                  {/* INITIAL COMMUTE TO STOP #1 */}
                   {itinerary.initial_transit && (
                     <div className="bg-slate-800/40 border border-slate-700/60 rounded-lg p-4 ml-2 text-xs space-y-2 text-slate-300">
                       <div className="flex items-center gap-2 text-emerald-400 font-semibold">
                         <span>🚍 COMMUTE TO STOP #1</span>
-                        <span>
-                          ({itinerary.initial_transit.commute_mins} mins)
-                        </span>
+                        <span>({itinerary.initial_transit.commute_mins} mins)</span>
                       </div>
                       <p className="font-mono whitespace-pre-line text-slate-300 leading-relaxed">
                         {itinerary.initial_transit.step_by_step}
@@ -295,17 +438,13 @@ export default function Home() {
                   )}
                 </div>
 
-                {/* 📍 ITINERARY STOPS LOOP */}
+                {/* ITINERARY STOPS */}
                 {(itinerary.stops || []).map((stop: any, index: number) => {
                   const stopNum = stop.stop_number ?? index + 1;
                   const isSelected = activeStopNumber === stopNum;
 
                   return (
-                    <div
-                      key={`stop-${stopNum}-${index}`}
-                      className="relative space-y-4"
-                    >
-                      {/* Timeline Node Marker */}
+                    <div key={`stop-${stopNum}-${index}`} className="relative space-y-4">
                       <div
                         className={`absolute -left-[31px] top-4 w-4 h-4 rounded-full ring-4 transition-all ${
                           isSelected
@@ -314,7 +453,6 @@ export default function Home() {
                         }`}
                       />
 
-                      {/* Timeline Card */}
                       <div
                         id={`stop-card-${stopNum}`}
                         onClick={() => handleSelectStop(stopNum)}
@@ -335,28 +473,19 @@ export default function Home() {
                             Stop #{stopNum}
                           </span>
                           <span className="text-xs font-mono text-slate-400">
-                            ⏰ {stop.start_time} – {stop.end_time} (
-                            {stop.duration_mins || stop.stay_duration_mins}{" "}
-                            mins)
+                            ⏰ {stop.start_time} – {stop.end_time} ({stop.duration_mins || stop.stay_duration_mins} mins)
                           </span>
                         </div>
 
-                        <h3 className="text-lg font-bold text-white">
-                          {stop.venue_name}
-                        </h3>
-                        <p className="text-slate-300 text-sm leading-relaxed">
-                          {stop.why_go}
-                        </p>
+                        <h3 className="text-lg font-bold text-white">{stop.venue_name}</h3>
+                        <p className="text-slate-300 text-sm leading-relaxed">{stop.why_go}</p>
                       </div>
 
-                      {/* Commute Box to next stop */}
                       {stop.transit_to_next && (
                         <div className="bg-slate-800/40 border border-slate-700/60 rounded-lg p-4 ml-2 text-xs space-y-2 text-slate-300">
                           <div className="flex items-center gap-2 text-emerald-400 font-semibold">
                             <span>🚍 COMMUTE</span>
-                            <span>
-                              ({stop.transit_to_next.commute_mins} mins)
-                            </span>
+                            <span>({stop.transit_to_next.commute_mins} mins)</span>
                           </div>
                           <p className="font-mono whitespace-pre-line text-slate-300 leading-relaxed">
                             {stop.transit_to_next.step_by_step}
@@ -369,7 +498,7 @@ export default function Home() {
               </div>
             </div>
 
-            {/* Right Column: Sticky Google Map (5 Cols) */}
+            {/* Right Column: Google Map */}
             <div className="lg:col-span-5 lg:sticky lg:top-8 h-[500px] lg:h-[calc(100vh-4rem)]">
               <ItineraryMap
                 startLocation={

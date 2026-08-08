@@ -6,7 +6,7 @@ from fastapi.security import OAuth2PasswordBearer, OAuth2PasswordRequestForm
 from jose import JWTError, jwt
 from passlib.context import CryptContext
 from pydantic import BaseModel, EmailStr
-from sqlalchemy import Column, Integer, String, create_engine
+from sqlalchemy import Column, Integer, String, Boolean, create_engine
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import Session, sessionmaker
 
@@ -14,7 +14,6 @@ SECRET_KEY = os.getenv("SECRET_KEY", "super-secret-fallback-key-change-in-railwa
 ALGORITHM = "HS256"
 ACCESS_TOKEN_EXPIRE_MINUTES = 1440  # 24 hours
 
-# Retrieve database URL and fix Supabase/Postgres scheme prefix if needed
 DATABASE_URL = os.getenv("DATABASE_URL", "sqlite:///./dayout.db")
 if DATABASE_URL and DATABASE_URL.startswith("postgres://"):
     DATABASE_URL = DATABASE_URL.replace("postgres://", "postgresql://", 1)
@@ -32,12 +31,13 @@ oauth2_scheme = OAuth2PasswordBearer(tokenUrl="api/auth/login")
 router = APIRouter(prefix="/api/auth", tags=["Authentication"])
 
 
-# --- DATABASE MODEL ---
+# --- DATABASE MODEL WITH ADMIN SUPPORT ---
 class UserDB(Base):
     __tablename__ = "users"
     id = Column(Integer, primary_key=True, index=True)
     email = Column(String, unique=True, index=True, nullable=False)
     hashed_password = Column(String, nullable=False)
+    is_admin = Column(Boolean, default=False)  # <-- Required for admin checks
 
 
 def init_db():
@@ -97,6 +97,15 @@ def get_current_user(token: str = Depends(oauth2_scheme), db: Session = Depends(
     if user is None:
         raise credentials_exception
     return user
+
+
+def get_current_admin_user(current_user: UserDB = Depends(get_current_user)):
+    if not current_user.is_admin:
+        raise HTTPException(
+            status_code=status.HTTP_403_FORBIDDEN,
+            detail="Admin privileges required for this action."
+        )
+    return current_user
 
 
 # --- ENDPOINTS ---
