@@ -7,7 +7,6 @@
     <list default="true" id="38107803-19b5-4aa9-91eb-727cdc0d235b" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/backend/auth.py" beforeDir="false" afterPath="$PROJECT_DIR$/backend/auth.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/requirements.txt" beforeDir="false" afterPath="$PROJECT_DIR$/backend/requirements.txt" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -493,7 +492,15 @@
       <option name="project" value="LOCAL" />
       <updated>1786198833049</updated>
     </task>
-    <option name="localTasksCounter" value="40" />
+    <task id="LOCAL-00040" summary="fixing backend db connection bug">
+      <option name="closed" value="true" />
+      <created>1786199155707</created>
+      <option name="number" value="00040" />
+      <option name="presentableId" value="LOCAL-00040" />
+      <option name="project" value="LOCAL" />
+      <updated>1786199155707</updated>
+    </task>
+    <option name="localTasksCounter" value="41" />
     <servers />
   </component>
   <component name="UnknownFeatures">
@@ -511,7 +518,6 @@
     </option>
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="add fixture test for routing" />
     <MESSAGE value="Improved UI that user can input their starting location and time" />
     <MESSAGE value="Change the calculated next timing referring to the recommended commute so the timing is more realistic" />
     <MESSAGE value="update Gmap marker" />
@@ -536,6 +542,7 @@
     <MESSAGE value="add admin access and fix requirement" />
     <MESSAGE value="update auth.py for DB connection" />
     <MESSAGE value="add @app.on_event(&quot;startup&quot;)" />
-    <option name="LAST_COMMIT_MESSAGE" value="add @app.on_event(&quot;startup&quot;)" />
+    <MESSAGE value="fixing backend db connection bug" />
+    <option name="LAST_COMMIT_MESSAGE" value="fixing backend db connection bug" />
   </component>
 </project>

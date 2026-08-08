@@ -1,6 +1,6 @@
 import os
 from datetime import datetime, timedelta, timezone
-import bcrypt  # <-- Replace passlib with native bcrypt
+import bcrypt
 from fastapi import APIRouter, Depends, HTTPException, status
 from fastapi.security import OAuth2PasswordBearer, OAuth2PasswordRequestForm
 from jose import JWTError, jwt
@@ -9,6 +9,10 @@ from sqlalchemy import Column, Integer, String, Boolean, create_engine
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import Session, sessionmaker
 from sqlalchemy.pool import NullPool
+from passlib.context import CryptContext
+
+# Initialize CryptContext
+pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
 
 SECRET_KEY = os.getenv("SECRET_KEY", "super-secret-fallback-key-change-in-railway")
 ALGORITHM = "HS256"
@@ -82,9 +86,8 @@ def verify_password(plain_password: str, hashed_password: str) -> bool:
         hashed_password.encode("utf-8")
     )
 
-
 def get_password_hash(password: str) -> str:
-    # Truncate to 72 bytes if necessary to prevent bcrypt overflow errors
+    # Truncate to 72 bytes to match bcrypt limit
     password_bytes = password.encode("utf-8")[:72]
     salt = bcrypt.gensalt()
     return bcrypt.hashpw(password_bytes, salt).decode("utf-8")
