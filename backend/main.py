@@ -49,6 +49,12 @@ app = FastAPI(title="DayOutPlanner API", default_response_class=UnicodeJSONRespo
 # Initialize database tables on startup
 init_db()
 
+
+@app.on_event("startup")
+def on_startup():
+    init_db()  # Creates tables in Supabase automatically on deploy
+
+
 # Mount authentication routes (/api/auth/signup and /api/auth/login)
 app.include_router(auth_router)
 

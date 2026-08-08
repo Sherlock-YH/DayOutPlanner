@@ -6,7 +6,7 @@
   <component name="ChangeListManager">
     <list default="true" id="38107803-19b5-4aa9-91eb-727cdc0d235b" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/auth.py" beforeDir="false" afterPath="$PROJECT_DIR$/backend/auth.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/main.py" beforeDir="false" afterPath="$PROJECT_DIR$/backend/main.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -476,7 +476,15 @@
       <option name="project" value="LOCAL" />
       <updated>1786197018865</updated>
     </task>
-    <option name="localTasksCounter" value="38" />
+    <task id="LOCAL-00038" summary="update auth.py for DB connection">
+      <option name="closed" value="true" />
+      <created>1786197848982</created>
+      <option name="number" value="00038" />
+      <option name="presentableId" value="LOCAL-00038" />
+      <option name="project" value="LOCAL" />
+      <updated>1786197848982</updated>
+    </task>
+    <option name="localTasksCounter" value="39" />
     <servers />
   </component>
   <component name="UnknownFeatures">
@@ -494,7 +502,6 @@
     </option>
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="Zero API Cost: @patch(&quot;gmaps_service.gmaps&quot;) prevents calls to the live Google Maps API during tests.&#10;&#10;Deterministic Edge Case Testing: Google Maps ZERO_RESULTS API payloads can be hard to reproduce on demand with live queries. Mocking lets you force that exact edge case instantly in 0.002s." />
     <MESSAGE value="feat(ui): add interactive Google Map and bi-directional marker sync&#10;&#10;- Integrate `@vis.gl/react-google-maps` into frontend&#10;- Create `ItineraryMap` component with `AdvancedMarker` and `InfoWindow` support&#10;- Implement bi-directional click synchronization between map markers and timeline cards&#10;- Add smooth auto-scrolling (`scrollIntoView`) to focus stop cards when clicking pins&#10;- Refactor `app/page.tsx` into a split-screen layout with a sticky map pane&#10;- Update `README.md` with full setup guide, tech stack, and API schema documentation" />
     <MESSAGE value="add fixture test for routing" />
     <MESSAGE value="Improved UI that user can input their starting location and time" />
@@ -519,6 +526,7 @@
     <MESSAGE value="update frontend icons and wordings" />
     <MESSAGE value="fix bug and improve wording" />
     <MESSAGE value="add admin access and fix requirement" />
-    <option name="LAST_COMMIT_MESSAGE" value="add admin access and fix requirement" />
+    <MESSAGE value="update auth.py for DB connection" />
+    <option name="LAST_COMMIT_MESSAGE" value="update auth.py for DB connection" />
   </component>
 </project>
