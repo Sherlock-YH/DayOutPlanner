@@ -256,21 +256,29 @@ export default function Home() {
     <main className="min-h-screen bg-slate-900 text-slate-100 p-4 md:p-8">
       <div className="max-w-7xl mx-auto space-y-6">
         {/* Header & Logout */}
-        <header className="flex flex-col sm:flex-row items-center justify-between border-b border-slate-800 pb-4 gap-4">
-          <div className="text-center sm:text-left space-y-1">
-            <h1 className="text-3xl font-extrabold tracking-tight text-emerald-400">
+        <header className="grid grid-cols-1 md:grid-cols-3 items-center border-b border-slate-800 pb-4 gap-4">
+          {/* Spacer for symmetrical 3-column centering */}
+          <div className="hidden md:block"></div>
+
+          {/* Centered App Title & Subtitle */}
+          <div className="text-center space-y-1">
+            <h1 className="text-2xl sm:text-3xl font-extrabold tracking-tight text-emerald-400">
               🇸🇬 One Day Out Planner
             </h1>
-            <p className="text-slate-400 text-sm">
+            <p className="text-slate-400 text-xs sm:text-sm">
               AI Travel Orchestrator powered by GPT-4o & Google Maps
             </p>
           </div>
-          <button
-            onClick={handleLogout}
-            className="text-xs px-4 py-2 border border-slate-700 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-300 transition cursor-pointer"
-          >
-            Log Out
-          </button>
+
+          {/* Top-Right Logout Button */}
+          <div className="flex justify-center md:justify-end">
+            <button
+              onClick={handleLogout}
+              className="text-xs px-4 py-2 border border-slate-700 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-300 transition cursor-pointer"
+            >
+              Log Out
+            </button>
+          </div>
         </header>
 
         {/* Input Form */}
