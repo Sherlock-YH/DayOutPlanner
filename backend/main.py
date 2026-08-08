@@ -1,3 +1,4 @@
+# main.py
 import json
 import os
 import sys
@@ -9,6 +10,9 @@ from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import JSONResponse
 from openai import OpenAI
 from pydantic import BaseModel
+
+from auth import router as auth_router, init_db, get_current_user, UserDB
+from fastapi import Depends, FastAPI
 
 # Import Google Maps transit service
 from gmaps_service import get_transit_route_by_name
@@ -28,10 +32,6 @@ client = OpenAI(api_key=openai_api_key) if openai_api_key else OpenAI()
 # ==========================================
 # 0. Unicode-safe JSON Response
 # ==========================================
-# FastAPI's default JSONResponse uses `ensure_ascii=True`, which raises a
-# UnicodeEncodeError when the payload contains non-ASCII characters (e.g.
-# the \u2028 line separator that OpenAI sometimes returns). Using
-# `ensure_ascii=False` lets the response body be encoded as UTF-8 instead.
 class UnicodeJSONResponse(JSONResponse):
     def render(self, content) -> bytes:
         return json.dumps(
@@ -44,6 +44,13 @@ class UnicodeJSONResponse(JSONResponse):
 
 
 app = FastAPI(title="DayOutPlanner API", default_response_class=UnicodeJSONResponse)
+
+# Initialize database tables on startup
+init_db()
+
+# Mount authentication routes (/api/auth/signup and /api/auth/login)
+app.include_router(auth_router)
+
 
 # ==========================================
 # 1. CORS Configuration
@@ -76,7 +83,7 @@ app.add_middleware(
 class PlanRequest(BaseModel):
     prompt: str
     start_location: str = "Marina Bay Sands, Singapore"
-    start_time: str = "09:00 AM"
+    start_time: str = "10:00 AM"
 
 
 class ItineraryStop(BaseModel):
@@ -95,9 +102,14 @@ class ItineraryPlan(BaseModel):
 # ==========================================
 # 3. API Endpoints
 # ==========================================
+
+# Protected route requiring a valid JWT bearer token
 @app.post("/api/plan")
-@app.post("/plan")
-def create_itinerary(req: PlanRequest):
+@app.post("/api/plan/")
+def create_itinerary(
+        req: PlanRequest,
+        current_user: UserDB = Depends(get_current_user)
+):
     if not req.prompt.strip():
         raise HTTPException(status_code=400, detail="Prompt cannot be empty")
 
@@ -109,7 +121,6 @@ def create_itinerary(req: PlanRequest):
         )
     except Exception as e:
         traceback.print_exc()
-        # Clean exception message to prevent ASCII encoding crashes
         error_msg = str(e).encode("utf-8", "ignore").decode("utf-8").replace("\u2028", " ")
         raise HTTPException(status_code=500, detail=error_msg)
 
@@ -118,11 +129,10 @@ def create_itinerary(req: PlanRequest):
 # 4. LLM Planner Generator
 # ==========================================
 def generate_itinerary_plan(
-    prompt: str,
-    start_location: str = "Marina Bay Sands, Singapore",
-    start_time_str: str = "09:00 AM",
+        prompt: str,
+        start_location: str = "Marina Bay Sands, Singapore",
+        start_time_str: str = "09:00 AM",
 ):
-    # Sanitize inputs to strip invisible Unicode line separators
     prompt = prompt.replace("\u2028", "\n").replace("\u2029", "\n").strip()
     start_location = start_location.replace("\u2028", " ").replace("\u2029", " ").strip()
     start_time_str = start_time_str.replace("\u2028", " ").replace("\u2029", " ").strip()
@@ -144,7 +154,6 @@ def generate_itinerary_plan(
     if current_time < now:
         current_time += timedelta(days=1)
 
-    # Clean multi-line system prompt without hidden unicode characters
     system_prompt = (
         "You are an expert Singapore travel planner and spatial logistics coordinator.\n\n"
         f"USER STARTING POINT: {start_location} at {start_time_str}.\n"
@@ -183,9 +192,9 @@ def generate_itinerary_plan(
 
         if isinstance(initial_transit, dict):
             initial_commute_mins = (
-                initial_transit.get("drive_mins")
-                or initial_transit.get("real_commute_mins")
-                or 0
+                    initial_transit.get("drive_mins")
+                    or initial_transit.get("real_commute_mins")
+                    or 0
             )
         else:
             initial_commute_mins = 0
@@ -249,9 +258,9 @@ def generate_itinerary_plan(
 
             if isinstance(transit_info, dict):
                 commute_mins = (
-                    transit_info.get("drive_mins")
-                    or transit_info.get("real_commute_mins")
-                    or 0
+                        transit_info.get("drive_mins")
+                        or transit_info.get("real_commute_mins")
+                        or 0
                 )
             else:
                 commute_mins = 0
@@ -284,15 +293,17 @@ def generate_itinerary_plan(
         "stops": formatted_stops,
     }
 
+
 @app.get("/")
 def health_check():
     return {"status": "online", "message": "DayOutPlanner API is running!"}
+
 
 # ==========================================
 # 5. CLI Test Runner
 # ==========================================
 if __name__ == "__main__":
-    test_prompt = "A 1-day outdoor nature and local food tour in Singapore"
+    test_prompt = "A 1-day outdoor nature and indoor activities and local food tour in Singapore"
     generate_itinerary_plan(
         prompt=test_prompt,
         start_location="Changi Airport Terminal 3",
